@@ -1,5 +1,4 @@
-from flask import Flask, session, render_template, redirect, url_for, make_response, request
-from flask_session import Session
+from flask import Flask, render_template, app 
 import x
 
 def _________GET_________(): pass

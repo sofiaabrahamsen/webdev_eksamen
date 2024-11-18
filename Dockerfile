@@ -7,3 +7,8 @@ COPY . .
 # CMD gunicorn --reload --workers 4 --bind 0.0.0.0:80 app:application
 # CMD gunicorn --reload --workers 1 --bind 0.0.0.0:80 app:application
 CMD python -m bottle --debug --reload --server paste --bind 0.0.0.0:80 app:application
+
+# Run the application
+# CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]
+CMD flask run --host=0.0.0.0 --port=80 --debug --reload
+# CMD python -m bottle --debug --reload --server paste --bind 0.0.0.0:80 app:application
