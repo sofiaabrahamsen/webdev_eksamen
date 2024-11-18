@@ -1,6 +1,8 @@
 from flask import Flask, render_template, app 
 import x
 
+app = Flask(__name__)
+
 def _________GET_________(): pass
 
 ##############################
