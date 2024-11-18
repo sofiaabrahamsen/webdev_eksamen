@@ -26,7 +26,16 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3307:3306"
-
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: webdev_phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 8080:80
 volumes:
   mysql_data:
   arangodb_data:
