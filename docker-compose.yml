@@ -1,0 +1,32 @@
+services:
+  python_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wolt_container
+    depends_on:
+      - mysql
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: company
+    volumes:
+      - .:/app
+    ports:
+      - 80:80  # Expose Python app
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: company
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql_data:
+  arangodb_data:
