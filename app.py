@@ -11,7 +11,7 @@ def view_index():
     name = "Tester"
     email = "test"
 
-        number = 1
+    number = 1
     return render_template("view_index.html", name=name)
 
 if __name__ == "__main__":
