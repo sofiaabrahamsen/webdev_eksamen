@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: webdev_container
+    container_name: webdev_flask
     depends_on:
       - mysql
     environment:

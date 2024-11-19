@@ -6,7 +6,7 @@ db, cursor = x.db()
 def insert_user(user):
     q = f"""
         INSERT INTO users
-        VALUES (%s, %s ,%s)
+        VALUES (%s, %s ,%s, %s)
         """
     values = tuple(user.values())
     cursor.execute(q, values)
@@ -19,6 +19,7 @@ try:
             user_pk CHAR(36),
             user_name VARCHAR(20) NOT NULL,
             user_last_name VARCHAR(20) NOT NULL,
+            user_email VARCHAR(50) NOT NULL,
             PRIMARY KEY(user_pk)
         )
         """
@@ -29,7 +30,8 @@ try:
     user = {
         "user_pk" : user_pk,
         "user_name" : "Santiago",
-        "user_last_name" : "Donoso"
+        "user_last_name" : "Donoso",
+        "user_email": "a@a.com"
     }
     insert_user(user)
 
