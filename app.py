@@ -8,7 +8,7 @@ def _________GET_________(): pass
 ##############################
 @app.get("/")
 def view_index():
-    name = "Test"
+    name = "Tester"
     return render_template("view_index.html", name=name)
 
 if __name__ == "__main__":
