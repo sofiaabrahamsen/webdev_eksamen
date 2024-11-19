@@ -10,7 +10,6 @@ def _________GET_________(): pass
 def view_index():
     name = "Tester"
     email = "test"
-
     number = 1
     return render_template("view_index.html", name=name)
 
