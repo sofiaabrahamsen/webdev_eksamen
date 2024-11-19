@@ -10,3 +10,6 @@ def _________GET_________(): pass
 def view_index():
     name = "Test"
     return render_template("view_index.html", name=name)
+
+if __name__ == "__main__":
+    app.run(debug=True)
