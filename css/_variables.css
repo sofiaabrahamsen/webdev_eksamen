@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
+:root {
+    --primary-col: #ff4b4b;
+    --secondary-col: #f5fbef;
+    --tertiary-col: #e6e8e6;
+
+    --cta-col: #02182b;
+    --multipurpose-col: #656256;
+
+    --cta-border-radius: 0.5rem;
+    --form-border-radius: 0.75rem;
+
+
+    --font-header: "Montserrat", sans-serif;
+    --font-body: "Open Sans", sans-serif;
+
+
+    --font-weight-header-mid: 700;
+    --font-weight-header-large: 900;
+
+    --font-weight-body-mid: 400;
+    --font-weight-body-small: 300;
+
+
+    --font-logo-rem-desk: 7.5rem;
+    --font-h1-rem-desk: 4rem;
+    --font-cta-rem-desk: 2.25rem;
+    --font-body-rem-desk-mid: 0.75rem;
+    --font-body-rem-desk-small: 0.625rem;
+}

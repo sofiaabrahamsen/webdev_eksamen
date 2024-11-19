@@ -1,0 +1,67 @@
+@import '_variables.css';
+@import 'general.css';
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--primary-col);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+.signin_box {
+    background-color: var(--secondary-col);
+    padding: 2rem;
+    border-radius: var(--form-border-radius);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.signin_box h1 {
+    margin: 0;
+    margin-bottom: 1.5rem;
+    color: var(--cta-col);
+}
+
+.signin_box input{
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+    font-size: var(--font-body-rem-desk-mid);
+}
+
+.signin_box a {
+    display: block;
+    text-align: right;
+    margin-bottom: 1rem;
+    font-size: var(--font-body-rem-desk-mid);
+}
+
+.signin_box button {
+    padding: 0.75rem;
+    font-size: var(--font-cta-rem-desk);
+}
+
+.signin_box p {
+    margin-top: 1rem;
+    font-size: var(--font-body-rem-desk-mid);
+}
+
+.signin_box p a {
+    text-decoration: none;
+    font-weight: bold;
+    text-align: left;
+}

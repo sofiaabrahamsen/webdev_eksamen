@@ -1,0 +1,56 @@
+@import '_variables.css';
+
+h1, h2, .logo, button.cta {
+    font-family: var(--font-header);
+}
+
+.logo {
+    color: var(--secondary-col);
+}
+
+p, input, label, a {
+    font-family: var(--font-body);
+    color: var(--cta-col);
+    text-decoration: none;
+}
+
+button.cta {
+    background-color: var(--cta-col);
+    color: var(--secondary-col);
+    border: none;
+    cursor: pointer;
+    border-radius: var(--cta-border-radius);
+}
+
+input {
+    border: 1px solid var(--tertiary-col);
+    border-radius: var(--cta-border-radius);
+    background-color: var(--tertiary-col);
+}
+
+input:focus {
+    outline: none;
+    box-shadow: 0rem 0rem 0.05rem 0.05rem var(--cta-col);
+
+}
+
+
+@media (min-width: 1050px) {
+
+    h1, h2, .logo {
+        font-family: var(--font-header);
+        font-size: var(--font-logo-rem-desk);
+        font-weight: var(--font-weight-header-large);
+    }
+
+    h1 {
+        font-size: var(--font-h1-rem-desk);
+    }
+
+    button.cta {
+        font-size: var(--font-logo-rem-desk);
+        font-weight: var(--font-weight-header-mid);
+    }
+
+
+}
