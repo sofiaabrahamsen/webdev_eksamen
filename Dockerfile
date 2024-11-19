@@ -1,12 +1,20 @@
-FROM python:3.10.14
+# Use the official Python image from the Docker Hub
+FROM python:3.9-slim
+
+# Set the working directory
 WORKDIR /app
-COPY requirements.txt /app
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-# CMD python app.py
-# CMD gunicorn --reload --workers 4 --bind 0.0.0.0:80 app:application
-# CMD gunicorn --reload --workers 1 --bind 0.0.0.0:80 app:application
-CMD python -m bottle --debug --reload --server paste --bind 0.0.0.0:80 app:application
+
+# Make port 5000 available to the world outside this container
+# EXPOSE 80
+
+# Define environment variable
+# ENV FLASK_APP=app.py
 
 # Run the application
 # CMD ["flask", "run", "--host=0.0.0.0", "--port=80"]
