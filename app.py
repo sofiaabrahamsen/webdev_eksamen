@@ -9,7 +9,9 @@ def _________GET_________(): pass
 @app.get("/")
 def view_index():
     name = "Tester"
-    number = 1
+    email = "test"
+
+        number = 1
     return render_template("view_index.html", name=name)
 
 if __name__ == "__main__":
