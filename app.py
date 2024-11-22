@@ -154,5 +154,11 @@ def login():
         if "db" in locals(): db.close()
 
 
+@app.post("/logout")
+def logout():
+    session.pop("user", None)
+    return redirect(url_for("view_login"))
+
+
 if __name__ == "__main__":
     app.run(debug=True)
