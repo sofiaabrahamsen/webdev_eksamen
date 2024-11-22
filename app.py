@@ -42,6 +42,59 @@ def view_login():
             return redirect(url_for("view_partner"))
     return render_template("view_login.html", x=x, title="Login", message=request.args.get("message", ""))
 
+##############################
+# Customer
+##############################
+@app.get("/customer")
+@x.no_cache
+def view_customer():
+    if not session.get("user", ""):
+        return redirect(url_for("view_login"))
+    user = session.get("user")
+    if len(user.get("roles", "")) > 1:
+        return redirect(url_for("view_choose_role"))
+    return render_template("view_customer.html", user=user)
+
+##############################
+# Partner
+##############################
+@app.get("/partner")
+@x.no_cache
+def view_partner():
+    if not session.get("user", ""):
+        return redirect(url_for("view_login"))
+    user = session.get("user")
+    if len(user.get("roles", "")) > 1:
+        return redirect(url_for("view_choose_role"))
+    return response
+
+
+##############################
+# Admin
+##############################
+@app.get("/admin")
+@x.no_cache
+def view_admin():
+    if not session.get("user", ""):
+        return redirect(url_for("view_login"))
+    user = session.get("user")
+    if not "admin" in user.get("roles", ""):
+        return redirect(url_for("view_login"))
+    return render_template("view_admin.html")
+
+##############################
+# Choose role
+##############################
+@app.get("/choose-role")
+@x.no_cache
+def view_choose_role():
+    if not session.get("user", ""):
+        return redirect(url_for("view_login"))
+    if not len(session.get("user").get("roles")) >= 2:
+        return redirect(url_for("view_login"))
+    user = session.get("user")
+    return render_template("view_choose_role.html", user=user, title="Choose role")
+
 ###################################
 ###################################
 def _________POST_________(): pass
