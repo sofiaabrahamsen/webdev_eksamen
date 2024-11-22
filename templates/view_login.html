@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HungerHub | Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='mixhtml.css') }}">
-    <script src="{{url_for('static', filename='mixhtml.js')}}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signin.css') }}">
-</head>
-<body>
+{% include "_top.html" %}
     <div class="container">
         <div class="logo">HungerHub</div>
         <div class="signin_box">
@@ -29,3 +19,4 @@
         </div>
     </div>
 </body>
+</html>
