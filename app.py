@@ -18,9 +18,16 @@ def _________GET_________(): pass
 ###################################
 
 ##############################
-# Login / landingpage
+# Index / landingpage
 ##############################
 @app.get("/")
+def view_index():
+    return render_template("view_index.html")
+
+##############################
+# Login
+##############################
+@app.get("/login")
 @x.no_cache
 def view_login():
     ic(session)
@@ -42,9 +49,9 @@ def _________POST_________(): pass
 ###################################
 
 ##############################
-# Login /landingpage
+# Login
 ##############################
-@app.post("/")
+@app.post("/login")
 def login():
     try:
         user_email = x.validate_user_email()
