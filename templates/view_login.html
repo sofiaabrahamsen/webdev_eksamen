@@ -13,19 +13,20 @@
         <div class="logo">HungerHub</div>
         <div class="signin_box">
             <h1>Sign In</h1>
-            <form>
+            <form id="frm_user_login">
                 <label for="user_email">Email</label>
-                <input type="email" name="user_email" id="user_email" mix-check="{{ x.REGEX_EMAIL }}">
+                <input type="email" name="user_email" mix-check="{{ x.REGEX_EMAIL }}">
 
                 <label for="user_password">Password</label>
-                <input type="password" name="user_password" id="user_password" mix-check="{{ x.REGEX_USER_PASSWORD }}">
+                <input type="password" name="user_password" mix-check="{{ x.REGEX_USER_PASSWORD }}">
 
                 <a href="#">Forgot password?</a>
-                <button class="cta" type="submit">Sign In</button>
+                <button class="cta" mix-post="/login" mix-data="#frm_user_login">Sign In</button>
             </form>
 
             <p>Don't have an account?</p>
             <p><a href="#">Sign Up here</a></p>
         </div>
     </div>
+    <script src="{{url_for('static', filename='mixhtml.js')}}"></script>
 </body>
