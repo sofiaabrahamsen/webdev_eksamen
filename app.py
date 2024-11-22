@@ -66,7 +66,7 @@ def view_partner():
     user = session.get("user")
     if len(user.get("roles", "")) > 1:
         return redirect(url_for("view_choose_role"))
-    return response
+    return render_template("view_partner.html")
 
 
 ##############################
@@ -154,6 +154,9 @@ def login():
         if "db" in locals(): db.close()
 
 
+##############################
+# Logout
+##############################
 @app.post("/logout")
 def logout():
     session.pop("user", None)

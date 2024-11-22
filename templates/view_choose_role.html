@@ -1,0 +1,14 @@
+
+{% include "_top.html" %}
+
+<main>
+    <div>
+        {% for role in user.get("roles"): %}
+        <a href="/{{role}}">
+            {{ role }}
+        </a>
+        {% endfor %}
+    </div>
+</main>
+
+{% include "_bottom.html" %}
