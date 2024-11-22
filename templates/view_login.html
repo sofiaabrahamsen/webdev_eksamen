@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HungerHub | Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='mixhtml.css') }}">
-    <script src="{{url_for('static', filename='mixhtml.js')}}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/signin.css') }}">
-</head>
-<body>
+{% include "_top.html" %}
+
+<main>
     <div class="container">
         <div class="logo">HungerHub</div>
         <div class="signin_box">
@@ -16,16 +8,16 @@
             <form id="frm_user_login">
                 <label for="user_email">Email</label>
                 <input type="email" name="user_email" mix-check="{{ x.REGEX_EMAIL }}">
-
                 <label for="user_password">Password</label>
                 <input type="password" name="user_password" mix-check="{{ x.REGEX_USER_PASSWORD }}">
-
                 <a href="#">Forgot password?</a>
                 <button class="cta" mix-post="/login" mix-data="#frm_user_login">Sign In</button>
             </form>
-
+            
             <p>Don't have an account?</p>
             <p><a href="#">Sign Up here</a></p>
         </div>
     </div>
-</body>
+</main>
+
+{% include "_bottom.html" %}
