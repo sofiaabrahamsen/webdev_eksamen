@@ -3,6 +3,8 @@ from flask_session import Session
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 import x
+import uuid
+import time
 
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
@@ -43,6 +45,24 @@ def view_login():
     return render_template("view_login.html", x=x, title="Login", message=request.args.get("message", ""))
 
 ##############################
+# Signup
+##############################
+@app.get("/signup")
+@x.no_cache
+def view_signup():  
+    ic(session)
+    if session.get("user"):
+        if len(session.get("user").get("roles")) > 1:
+            return redirect(url_for("view_choose_role")) 
+        if "admin" in session.get("user").get("roles"):
+            return redirect(url_for("view_admin"))
+        if "customer" in session.get("user").get("roles"):
+            return redirect(url_for("view_customer")) 
+        if "partner" in session.get("user").get("roles"):
+            return redirect(url_for("view_partner"))         
+    return render_template("view_signup.html", x=x, title="Signup")
+
+##############################
 # Customer
 ##############################
 @app.get("/customer")
@@ -66,8 +86,7 @@ def view_partner():
     user = session.get("user")
     if len(user.get("roles", "")) > 1:
         return redirect(url_for("view_choose_role"))
-    return render_template("view_partner.html")
-
+    return render_template("view_partner.html", user=user)
 
 ##############################
 # Admin
@@ -80,7 +99,7 @@ def view_admin():
     user = session.get("user")
     if not "admin" in user.get("roles", ""):
         return redirect(url_for("view_login"))
-    return render_template("view_admin.html")
+    return render_template("view_admin.html", user=user)
 
 ##############################
 # Choose role
@@ -153,6 +172,55 @@ def login():
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
+##############################
+# Signup
+##############################
+@app.post("/users")
+@x.no_cache
+def signup():
+    try:
+        user_name = x.validate_user_name()
+        user_last_name = x.validate_user_last_name()
+        user_email = x.validate_user_email()
+        user_password = x.validate_user_password()
+        hashed_password = generate_password_hash(user_password)
+        
+        user_pk = str(uuid.uuid4())
+        user_created_at = int(time.time())
+        user_deleted_at = 0
+        user_blocked_at = 0
+        user_updated_at = 0
+        user_verified_at = 0
+        user_verification_key = str(uuid.uuid4())
+
+        db, cursor = x.db()
+        q = 'INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)'
+        cursor.execute(q, (user_pk, user_name, user_last_name, user_email, 
+                        hashed_password, user_created_at, user_deleted_at, user_blocked_at, 
+                        user_updated_at, user_verified_at, user_verification_key))
+        
+        role_fk = x.CUSTOMER_ROLE_PK
+        q_roles = 'INSERT INTO users_roles (user_role_user_fk, user_role_role_fk) VALUES (%s, %s)'
+        cursor.execute(q_roles, (user_pk, role_fk))
+        db.commit()
+        return """<template mix-redirect="/login"></template>""", 201
+    
+    except Exception as ex:
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            if "users.user_email" in str(ex): 
+                toast = render_template("___toast.html", message="email not available")
+                return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
+            return f"""<template mix-target="#toast" mix-bottom>System upgrating</template>""", 500        
+        return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
 
 ##############################
 # Logout

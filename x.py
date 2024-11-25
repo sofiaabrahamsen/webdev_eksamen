@@ -58,6 +58,25 @@ def allow_origin(origin="*"):
         return decorated_function
     return decorator
 
+##############################
+USER_NAME_MIN = 2
+USER_NAME_MAX = 20
+USER_NAME_REGEX = f"^.{{{USER_NAME_MIN},{USER_NAME_MAX}}}$"
+def validate_user_name():
+    error = f"name {USER_NAME_MIN} to {USER_NAME_MAX} characters"
+    user_name = request.form.get("user_name", "").strip()
+    if not re.match(USER_NAME_REGEX, user_name): raise_custom_exception(error, 400)
+    return user_name
+
+##############################
+USER_LAST_NAME_MIN = 2
+USER_LAST_NAME_MAX = 20
+USER_LAST_NAME_REGEX = f"^.{{{USER_LAST_NAME_MIN},{USER_LAST_NAME_MAX}}}$"
+def validate_user_last_name():
+    error = f"last name {USER_LAST_NAME_MIN} to {USER_LAST_NAME_MAX} characters"
+    user_last_name = request.form.get("user_last_name", "").strip() # None
+    if not re.match(USER_LAST_NAME_REGEX, user_last_name): raise_custom_exception(error, 400)
+    return user_last_name
 
 ##############################
 REGEX_EMAIL = "^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$"
@@ -76,3 +95,4 @@ def validate_user_password():
     user_password = request.form.get("user_password", "").strip()
     if not re.match(REGEX_USER_PASSWORD, user_password): raise_custom_exception(error, 400)
     return user_password
+
