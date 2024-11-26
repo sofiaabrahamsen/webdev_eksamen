@@ -241,6 +241,54 @@ if __name__ == "__main__":
     app.run(debug=True)
 
 
+##############################
+##############################
+##############################
+
+def _________PUT_________(): pass
+
+##############################
+##############################
+##############################
+
+##############################
+# Update user
+##############################
+@app.put("/users")
+def user_update():
+    try:
+        if not session.get("user"): x.raise_custom_exception("please login", 401)
+
+        user_pk = session.get("user").get("user_pk")
+        user_name = x.validate_user_name()
+        user_last_name = x.validate_user_last_name()
+        user_email = x.validate_user_email()
+
+        user_updated_at = int(time.time())
+
+        db, cursor = x.db()
+        q = """ UPDATE users
+                SET user_name = %s, user_last_name = %s, user_email = %s, user_updated_at = %s
+                WHERE user_pk = %s
+            """
+        cursor.execute(q, (user_name, user_last_name, user_email, user_updated_at, user_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot update user", 401)
+        db.commit()
+        return """<template>user updated</template>"""
+    
+    except Exception as ex:
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code
+        if isinstance(ex, x.mysql.connector.Error):
+            if "users.user_email" in str(ex): return "<template>email not available</template>", 400
+            return "<template>System upgrating</template>", 500        
+        return "<template>System under maintenance</template>", 500    
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
 ###################################
 ###################################
 def ________DELETE________(): pass
