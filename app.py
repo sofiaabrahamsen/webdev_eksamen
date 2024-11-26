@@ -27,6 +27,12 @@ def view_index():
     return render_template("view_index.html")
 
 ##############################
+# Items and map
+##############################
+@app.get("/items")
+def view_items():
+    return render_template("view_item.html")
+##############################
 # Login
 ##############################
 @app.get("/login")

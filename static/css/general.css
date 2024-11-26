@@ -34,9 +34,20 @@ input:focus {
 
 }
 
+/* Map styling: takes 50% of the width */
 #map {
-    height: 100vh; /* Full viewport height */
-    width: 100%; /* Full width */
+    height: 100vh; 
+    width: 100%;
+}
+
+/* Content styling: takes 50% of the width */
+#items-content {
+    width: 100%;
+    display: flex; /* Optional: center content vertically */
+    flex-direction: column; /* Align text elements top-to-bottom */
+    justify-content: center; /* Center content vertically */
+    background-color: #f9f9f9; /* Optional background color */
+    padding: 3rem;
 }
 
 
