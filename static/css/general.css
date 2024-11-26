@@ -34,6 +34,11 @@ input:focus {
 
 }
 
+#map {
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width */
+}
+
 
 @media (min-width: 1050px) {
 
