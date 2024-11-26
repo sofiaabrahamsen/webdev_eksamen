@@ -96,3 +96,11 @@ def validate_user_password():
     if not re.match(REGEX_USER_PASSWORD, user_password): raise_custom_exception(error, 400)
     return user_password
 
+##############################
+REGEX_UUID4 = "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+def validate_uuid4(uuid4 = ""):
+    error = f"invalid uuid4"
+    if not uuid4:
+        uuid4 = request.values.get("uuid4", "").strip()
+    if not re.match(REGEX_UUID4, uuid4): raise_custom_exception(error, 400)
+    return uuid4
