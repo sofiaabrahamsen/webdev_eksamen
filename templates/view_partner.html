@@ -1,6 +1,30 @@
 {% include "_top_logged.html" %}
-
+<main>
 <h1>Partner</h1>
 {{ user }}
+<form class="profile">
+    <div>
+        <label for="name">First name</label>
+        <input type="text" name="name" id="name" placeholder={{user['user_name']}}>
+    </div>
+
+    <div>
+        <label for="name">Last name</label>
+        <input type="text" name="name" id="name" placeholder={{user['user_last_name']}}>
+    </div>
+
+    <div>
+        <label for="email">E-mail</label>
+        <input type="email" name="email" id="email" placeholder={{user['user_email']}}>
+    </div>
+
+    <div>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" placeholder="**********">
+    </div>
+
+    <button class="cta" type="submit">Update profile</button>
+</form>
+</main>
 </body>
 </html>

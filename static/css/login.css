@@ -50,11 +50,6 @@ form {
     font-size: var(--font-body-rem-desk-mid);
 }
 
-.signin_box button {
-    padding: 0.75rem;
-    font-size: var(--font-cta-rem-desk);
-}
-
 .signin_box p {
     margin-top: 1rem;
     font-size: var(--font-body-rem-desk-mid);
