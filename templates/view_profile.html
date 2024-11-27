@@ -4,7 +4,7 @@
                 <h1>Profile</h1>
 
         <!-- form, hvor placeholders indeholder/viser nuværende info -->
-                <form class="profile">
+                <form id="frm_profile_update" class="profile">
                     <div>
                         <label for="user_name">First name</label>
                         <input type="text" name="user_name" id="user_name" placeholder="{{user['user_name']}}" mix-check="{{ x.USER_NAME_REGEX }}">
@@ -26,7 +26,7 @@
                     </div>
 
                 <!-- skal have disse knapper til at virke med korrekte routes -->
-                    <button mix-put="/users" mix-data="#update" mix-default="Update" mix-await="Please wait..." class="cta" type="submit">Update profile</button>
+                    <button mix-put="/users" mix-data="#frm_profile_update" class="cta">Update profile</button>
                     <button class="delete" title="Delete User" mix-get="/users/delete/{{user['user_pk']}}">Delete profile</button>
                 </form>
             </section>
