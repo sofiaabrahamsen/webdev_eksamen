@@ -22,7 +22,7 @@
                     
                 <!-- skal have disse knapper til at virke med korrekte routes -->
                     <button mix-put="/users" mix-data="#frm_profile_update" class="cta">Update profile</button>
-                    <button class="delete" title="Delete User" mix-get="/users/delete/{{user['user_pk']}}">Delete profile</button>
+                    <button class="delete" title="Delete User" mix-delete="/users/delete/{{user['user_pk']}}">Delete profile</button>
                 </form>
             </section>
         </main>
