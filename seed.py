@@ -79,6 +79,7 @@ try:
             item_pk CHAR(36),
             item_user_fk CHAR(36),
             item_title VARCHAR(50) NOT NULL,
+            item_description VARCHAR(50) NOT NULL,
             item_price DECIMAL(5,2) NOT NULL,
             item_image VARCHAR(50),
             PRIMARY KEY(item_pk)
@@ -324,11 +325,12 @@ try:
         for _ in range(random.randint(5,20)):
             # Generate a random integer between 1 and 100 to represent a unique identifier for a dish
             dish_id = random.randint(1, 100)
+            item_description = "description"
             cursor.execute("""
             INSERT INTO items (
-                item_pk, item_user_fk, item_title, item_price, item_image)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (str(uuid.uuid4()), user_pk, random.choice(dishes), round(random.uniform(50, 999), 2), f"dish_{dish_id}.jpg"))                
+                item_pk, item_user_fk, item_title, item_description, item_price, item_image)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (str(uuid.uuid4()), user_pk, random.choice(dishes), item_description, round(random.uniform(50, 999), 2), f"dish_{dish_id}.jpg"))                
 
     db.commit()
 
