@@ -304,8 +304,9 @@ def user_delete(user_pk):
     try:
         # Check if user is logged
         if not session.get("user", ""): return redirect(url_for("view_login"))
-        # Check if it is an admin
-        if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
+        # Check if it is an admin (can delete all users). If its not the admin role then you can only delete your own user.
+        if not "admin" in session.get("user").get("roles") and session.get("user").get("user_pk") != user_pk:
+            return redirect(url_for("view_login"))
         user_pk = x.validate_uuid4(user_pk)
         user_deleted_at = int(time.time())
         db, cursor = x.db()
