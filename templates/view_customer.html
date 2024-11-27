@@ -3,6 +3,12 @@
 <h1>Customer</h1>
 {{ user }}
 
+    <form method="POST" action="{{url_for('logout')}}">
+        <button>
+            Logout
+        </button>
+    </form>
+    
     <!-- Left side: Map -->
     <div id="map"></div>
     
