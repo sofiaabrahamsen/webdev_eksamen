@@ -1,7 +1,10 @@
-
 {% include "_top.html" %}
 
-<main>
+    <form method="POST" action="{{url_for('logout')}}">
+        <button>
+            Logout
+        </button>
+
     <div>
         {% for role in user.get("roles"): %}
         <a href="/{{role}}">
@@ -9,6 +12,5 @@
         </a>
         {% endfor %}
     </div>
-</main>
 
 {% include "_bottom.html" %}
