@@ -23,6 +23,7 @@ try:
     ###############################
     ######   Create users table
     ###############################
+    cursor.execute("DROP TABLE IF EXISTS items")
     cursor.execute("DROP TABLE IF EXISTS users_roles")
     cursor.execute("DROP TABLE IF EXISTS users")
     cursor.execute("DROP TABLE IF EXISTS roles")
@@ -69,6 +70,22 @@ try:
     cursor.execute(q)
     cursor.execute("ALTER TABLE users_roles ADD FOREIGN KEY (user_role_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE ON UPDATE RESTRICT") 
     cursor.execute("ALTER TABLE users_roles ADD FOREIGN KEY (user_role_role_fk) REFERENCES roles(role_pk) ON DELETE CASCADE ON UPDATE RESTRICT") 
+
+    ##################################
+    ######   Create items table
+    ##################################
+    q = """
+        CREATE TABLE items (
+            item_pk CHAR(36),
+            item_user_fk CHAR(36),
+            item_title VARCHAR(50) NOT NULL,
+            item_price DECIMAL(5,2) NOT NULL,
+            item_image VARCHAR(50),
+            PRIMARY KEY(item_pk)
+        );
+        """        
+    cursor.execute(q)
+    cursor.execute("ALTER TABLE items ADD FOREIGN KEY (item_user_fk) REFERENCES users(user_pk) ON DELETE CASCADE ON UPDATE RESTRICT")
 
 
     ###############################
@@ -273,6 +290,10 @@ try:
     ###############################
     ######   Create 20 restaurants
     ###############################
+
+    ##### 20 dishes #####
+    dishes = ["Spaghetti Carbonara","Chicken Alfredo","Beef Wellington","Sushi","Pizza Margherita","Tacos","Caesar Salad","Fish and Chips","Pad Thai","Dim Sum","Croissant","Ramen","Lasagna","Burrito","Chicken Parmesan","Tom Yum Soup","Shawarma","Paella","Hamburger","Chicken Tikka Masala"]
+
     user_password = hashed_password = generate_password_hash("password")
     for _ in range(20):
         user_pk = str(uuid.uuid4())
@@ -298,6 +319,16 @@ try:
             user_role_role_fk)
             VALUES (%s, %s)
         """, (user_pk, x.RESTAURANT_ROLE_PK))
+
+        #### generate 20 random items to the items table ####
+        for _ in range(random.randint(5,20)):
+            # Generate a random integer between 1 and 100 to represent a unique identifier for a dish
+            dish_id = random.randint(1, 100)
+            cursor.execute("""
+            INSERT INTO items (
+                item_pk, item_user_fk, item_title, item_price, item_image)
+                VALUES (%s, %s, %s, %s, %s)
+            """, (str(uuid.uuid4()), user_pk, random.choice(dishes), round(random.uniform(50, 999), 2), f"dish_{dish_id}.jpg"))                
 
     db.commit()
 
