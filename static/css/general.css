@@ -1,11 +1,12 @@
 @import '_variables.css';
 @import 'partner.css';
+@import 'index.css';
 
 * {
     margin: 0;
 }
 
-h1, h2, .logo, button.cta {
+h1, h2, .logo, .cta {
     font-family: var(--font-header);
 }
 
@@ -19,7 +20,7 @@ p, input, label, a {
     text-decoration: none;
 }
 
-button.cta {
+.cta {
     background-color: var(--cta-col);
     color: var(--secondary-col);
     border: none;
