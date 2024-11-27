@@ -1,0 +1,59 @@
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* 4 lige store kolonner */
+    grid-template-rows: auto auto auto; /* 3 rækker */
+    grid-template-areas: 
+        "header_logo header header . . ."    /* Række 1: h1 fylder to kolonner */
+        ". . btn btn . ."          /* Række 2: btn fylder kolonne 2-3 */
+        ". . . img hub .";       /* Række 3: logo fylder kolonne 2-3 */
+    gap: 3rem; /* Giver mellemrum mellem grid-items */
+}
+
+/* Placer elementerne i deres grid-områder */
+h1.header {
+    grid-area: header;
+    color: var(--secondary-col);
+    font-size: var(--font-logo-rem-desk);
+
+}
+
+.header_logo {
+    grid-area: header_logo;
+    text-align: end;
+}
+
+.btn {
+    grid-area: btn;
+    display: flex; /* Bevarer flex-opførsel inde i section.btn */
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.img {
+    grid-area: img;
+    text-align: end;
+}
+
+.hub {
+    grid-area: hub;
+    text-align: start;
+}
+
+.btn {
+    font-size: var(--font-cta-rem-desk);
+    font-weight: var(--font-weight-header-mid);
+}
+
+p.large {
+    font-size: var(--font-h1-rem-desk);
+    font-family: var(--font-header);
+    color: var(--secondary-col);
+    font-weight: var(--font-weight-header-large);
+
+}
+
+img {
+    width: 4rem;
+    height: 4rem;
+}

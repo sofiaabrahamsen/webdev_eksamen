@@ -1,16 +1,26 @@
 {% include "_top.html" %}
 
 <main>
-    <div class="container">
-        <div class="logo">HungerHub</div>
-        <div class="button_box">
-            <button class="cta" mix-post="/signup">Sign Up</button>
-            <button class="cta" mix-post="/signin">Sign In</button>
-        </div>
-        <footer>
-            <div class="footer_logo">Hub</div>
-        </footer>
+
+    <div class="header_logo">
+    <img src="{{ url_for('static', filename='assets/pacman.png') }}" alt="HungerHub logo">
     </div>
+
+    <h1 class="header">HungerHub</h1>
+
+    <section class="btn">
+        <a class="cta" href="{{url_for('view_login')}}">Sign in</a>
+        <a class="cta" href="{{url_for('view_signup')}}">Sign up</a>
+    </section>
+
+    <div class="img">
+            <img src="{{ url_for('static', filename='assets/pacman.png') }}" alt="HungerHub logo">
+    </div>
+
+    <section class="hub">
+    <p class="large">Hub</p>
+    </section>
+
 </main>
 
 
