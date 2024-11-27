@@ -3,6 +3,10 @@ from functools import wraps
 import mysql.connector
 import re
 
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
 
@@ -104,3 +108,21 @@ def validate_uuid4(uuid4 = ""):
         uuid4 = request.values.get("uuid4", "").strip()
     if not re.match(REGEX_UUID4, uuid4): raise_custom_exception(error, 400)
     return uuid4
+
+
+##############################
+UPLOAD_ITEM_FOLDER = './images'
+ALLOWED_ITEM_FILE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
+
+def validate_item_image():
+    if 'item_file' not in request.files: raise_custom_exception("item_file missing", 400)
+    file = request.files.get("item_file", "")
+    if file.filename == "": raise_custom_exception("item_file name invalid", 400)
+
+    if file:
+        ic(file.filename)
+        file_extension = os.path.splitext(file.filename)[1][1:]
+        ic(file_extension)
+        if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS: raise_custom_exception("item_file invalid extension", 400)
+        filename = str(uuid.uuid4()) + file_extension
+        return file, filename
