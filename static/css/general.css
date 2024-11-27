@@ -28,6 +28,15 @@ button.cta {
     padding: 0.75rem;
 }
 
+button.delete {
+    background-color: var(--primary-col);
+    color: var(--secondary-col);
+    border: none;
+    cursor: pointer;
+    border-radius: var(--cta-border-radius);
+    padding: 0.75rem;
+}
+
 header {
     background-color: var(--primary-col);
     padding: 1rem;
@@ -102,7 +111,7 @@ form.profile {
         font-size: var(--font-h1-rem-desk);
     }
 
-    button.cta {
+    button {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
     }
