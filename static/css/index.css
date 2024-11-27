@@ -1,3 +1,5 @@
+@media (min-width: 1050px) {
+
 main {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* 4 lige store kolonner */
@@ -56,4 +58,6 @@ p.large {
 img {
     width: 4rem;
     height: 4rem;
+}
+
 }
