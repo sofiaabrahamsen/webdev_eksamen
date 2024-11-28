@@ -1,7 +1,10 @@
 from flask import make_response, request
 from functools import wraps
+from decimal import Decimal, InvalidOperation
 import mysql.connector
 import re
+import os
+import uuid
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -115,14 +118,52 @@ UPLOAD_ITEM_FOLDER = './images'
 ALLOWED_ITEM_FILE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 def validate_item_image():
-    if 'item_file' not in request.files: raise_custom_exception("item_file missing", 400)
-    file = request.files.get("item_file", "")
-    if file.filename == "": raise_custom_exception("item_file name invalid", 400)
+    if 'item_image' not in request.files: raise_custom_exception("item_image missing", 400)
+    file = request.files.get("item_image", "")
+    if file.filename == "": raise_custom_exception("item_image name invalid", 400)
 
     if file:
         ic(file.filename)
         file_extension = os.path.splitext(file.filename)[1][1:]
         ic(file_extension)
-        if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS: raise_custom_exception("item_file invalid extension", 400)
-        filename = str(uuid.uuid4()) + file_extension
+        if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS: raise_custom_exception("item_image invalid extension", 400)
+    
+        filename = f"{str(uuid.uuid4())}.{file_extension}"
         return file, filename
+    
+##############################
+ITEM_TITLE_MIN = 2
+ITEM_TITLE_MAX = 20
+ITEM_TITLE_REGEX = f"^.{{{ITEM_TITLE_MIN},{ITEM_TITLE_MAX}}}$"
+def validate_item_title():
+    error = f"title must be between {ITEM_TITLE_MIN} to {ITEM_TITLE_MAX} characters"
+    item_title = request.form.get("item_title", "").strip()
+    if not re.match(ITEM_TITLE_REGEX, item_title): raise_custom_exception(error, 400)
+    return item_title
+
+##############################
+ITEM_DESCRIPTION_MIN = 2
+ITEM_DESCRIPTION_MAX = 50
+ITEM_DESCRIPTION_REGEX = f"^.{{{ITEM_DESCRIPTION_MIN},{ITEM_DESCRIPTION_MAX}}}$"
+def validate_item_description():
+    error = f"description much be between {ITEM_DESCRIPTION_MIN} to {ITEM_DESCRIPTION_MAX} characters"
+    item_description = request.form.get("item_description", "").strip()
+    if not re.match(ITEM_DESCRIPTION_REGEX, item_description): raise_custom_exception(error, 400)
+    return item_description
+
+##############################
+ITEM_PRICE_MIN = Decimal('0.01')
+ITEM_PRICE_MAX = Decimal('10000.00')
+def validate_item_price():
+    error = f"Price must be a valid number between {ITEM_PRICE_MIN} and {ITEM_PRICE_MAX}"
+    item_price_str = request.form.get("item_price", "").strip()
+    try:
+        # Convert item_price to Decimal for precise validation
+        item_price = Decimal(item_price_str)
+    except InvalidOperation:
+        # Raise error if conversion to Decimal fails
+        raise_custom_exception("Price must be a valid decimal number", 400)
+    # Check if the price is within the allowed range
+    if not (ITEM_PRICE_MIN <= item_price <= ITEM_PRICE_MAX):
+        raise_custom_exception(error, 400)
+    return item_price

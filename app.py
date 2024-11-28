@@ -5,6 +5,7 @@ from werkzeug.security import check_password_hash
 import x
 import uuid
 import time
+import os
 
 from icecream import ic
 ic.configureOutput(prefix=f'***** | ', includeContext=True)
@@ -236,10 +237,61 @@ def logout():
     session.pop("user", None)
     return redirect(url_for("view_login"))
 
+##############################
+# Create item
+##############################
+@app.post("/items")
+def create_item():
+    try:
+        # Check if the user is logged in
+        if not session.get("user"):
+            x.raise_custom_exception("Please login to create an item.", 401)
+        # Extract the user ID from the session
+        user_pk = session.get("user").get("user_pk")
+        # Validate inputs for the item
+        item_title = x.validate_item_title()
+        item_description = x.validate_item_description()
+        item_price = x.validate_item_price()
+        file, item_image = x.validate_item_image()  # Validate and process image file
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        # Save the uploaded image to the designated folder
+        file.save(os.path.join(x.UPLOAD_ITEM_FOLDER, item_image))
 
+        # Database connection and insertion
+        db, cursor = x.db()
+        item_pk = str(uuid.uuid4())  # Generate a unique identifier for the item
+
+        # Insert the new item into the database
+        q = """
+            INSERT INTO items (item_pk, item_user_fk, item_title, item_description, item_price, item_image)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(q, (item_pk, user_pk, item_title, item_description, item_price, item_image))
+
+        # Commit the transaction to save the item
+        db.commit()
+
+        # Success response
+        toast = render_template("___toast.html", message="Item successfully created.")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
+    except Exception as ex:
+        ic(ex)
+        # Rollback the database transaction if there's an error
+        if "db" in locals(): db.rollback()
+
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
+
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>System upgrading</template>", 500
+
+        return "<template>System under maintenance</template>", 500
+    finally:
+        # Close database resources
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
 
 ##############################
 ##############################
@@ -329,3 +381,7 @@ def user_delete(user_pk):
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
+##########################
+if __name__ == "__main__":
+    app.run(debug=True)
