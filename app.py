@@ -368,23 +368,29 @@ def user_update():
 def item_update():
     try:
         if not session.get("user"): x.raise_custom_exception("please login", 401)
-
+        # Get the item_pk from the session
         item_pk = session.get("item").get("item_pk")
         if not item_pk:
             x.raise_custom_exception("invalid item", 400)
-    
+        # validate inputs for updating fields
         item_title = x.validate_item_title()
         item_description = x.validate_item_description()
         item_price = x.validate_item_price()
         item_updated_at = int(time.time())
+        # Validate and process the new image if provided
+        # `optional=True` allows for no image
+        file, item_image = x.validate_item_image() 
+        # Save the new image file
+        file.save(os.path.join(x.UPLOAD_ITEM_FOLDER, item_image))
 
         db, cursor = x.db()
         q = """ UPDATE items
-                SET item_title = %s, item_description = %s, item_price = %s, item_updated_at = %s
+                SET item_title = %s, item_description = %s, item_price = %s, item_image = %s, item_updated_at = %s
                 WHERE item_pk = %s
             """
-        cursor.execute(q, (item_title, item_description, item_price, item_updated_at, item_pk))
-        
+        cursor.execute(q, (item_title, item_description, item_price, item_image, item_updated_at, item_pk))
+
+        # Ensure exactly one row was updated
         if cursor.rowcount != 1: x.raise_custom_exception("cannot update item", 401)
         db.commit()
         return """<template>item updated</template>"""
