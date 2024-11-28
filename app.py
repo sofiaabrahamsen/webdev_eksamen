@@ -28,6 +28,17 @@ def view_index():
     return render_template("view_index.html")
 
 ##############################
+# Index / landingpage
+##############################
+@app.get("/profile")
+def view_profile():
+    user = session.get("user", "")
+    if not user:
+        return redirect(url_for("view_index"))
+    return render_template("view_profile.html", user=user)
+
+
+##############################
 # Items and map
 ##############################
 @app.get("/items")
