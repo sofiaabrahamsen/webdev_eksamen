@@ -28,7 +28,7 @@ def view_index():
     return render_template("view_index.html")
 
 ##############################
-# Index / landingpage
+# Profile
 ##############################
 @app.get("/profile")
 def view_profile():
@@ -196,7 +196,7 @@ def login():
 ##############################
 @app.post("/users")
 @x.no_cache
-def signup():
+def create_user():
     try:
         user_name = x.validate_user_name()
         user_last_name = x.validate_user_last_name()
@@ -266,6 +266,11 @@ def create_item():
         item_price = x.validate_item_price()
         file, item_image = x.validate_item_image()  # Validate and process image file
 
+        item_created_at = int(time.time())
+        item_deleted_at = 0
+        item_blocked_at = 0
+        item_updated_at = 0
+
         # Save the uploaded image to the designated folder
         file.save(os.path.join(x.UPLOAD_ITEM_FOLDER, item_image))
 
@@ -275,10 +280,10 @@ def create_item():
 
         # Insert the new item into the database
         q = """
-            INSERT INTO items (item_pk, item_user_fk, item_title, item_description, item_price, item_image)
-            VALUES (%s, %s, %s, %s, %s, %s)
+            INSERT INTO items (item_pk, item_user_fk, item_title, item_description, item_price, item_image, item_created_at, item_deleted_at, item_blocked_at, item_updated_at)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(q, (item_pk, user_pk, item_title, item_description, item_price, item_image))
+        cursor.execute(q, (item_pk, user_pk, item_title, item_description, item_price, item_image, item_created_at, item_deleted_at, item_blocked_at, item_updated_at))
 
         # Commit the transaction to save the item
         db.commit()
@@ -352,6 +357,60 @@ def user_update():
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
+##############################
+# Update item
+##############################
+@app.put("/items")
+def item_update():
+    try:
+        if not session.get("user"): x.raise_custom_exception("please login", 401)
+
+        #item_pk = session.get("item").get("item_pk")
+        #if not item_pk:
+        #    x.raise_custom_exception("invalid item", 400)
+
+        # Validate item from session
+        item_data = session.get("item")
+        if not item_data or not item_data.get("item_pk"):
+            x.raise_custom_exception("Invalid item. Please refresh and try again.", 400)
+        item_pk = item_data.get("item_pk")
+    
+        item_title = x.validate_item_title()
+        item_description = x.validate_item_description()
+        item_price = x.validate_item_price()
+        item_updated_at = int(time.time())
+
+        db, cursor = x.db()
+        q = """ UPDATE items
+                SET item_title = %s, item_description = %s, item_price = %s, item_updated_at = %s
+                WHERE item_pk = %s
+            """
+        cursor.execute(q, (item_title, item_description, item_price, item_updated_at, item_pk))
+        
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot update item", 401)
+        db.commit()
+        return """<template>item updated</template>"""
+    
+    except Exception as ex:
+        ic(ex)
+        # Rollback the database transaction if there's an error
+        if "db" in locals(): db.rollback()
+
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
+
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>System upgrading</template>", 500
+
+        return "<template>System under maintenance</template>", 500
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
 
 ###################################
 ###################################
