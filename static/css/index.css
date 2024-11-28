@@ -1,6 +1,6 @@
 @media (min-width: 1050px) {
 
-main {
+main.index {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* 4 lige store kolonner */
     grid-template-rows: auto auto auto; /* 3 rækker */
