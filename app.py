@@ -28,7 +28,7 @@ def view_index():
     return render_template("view_index.html")
 
 ##############################
-# Index / landingpage
+# Profile
 ##############################
 @app.get("/profile")
 def view_profile():
