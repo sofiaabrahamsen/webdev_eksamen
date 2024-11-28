@@ -82,6 +82,10 @@ try:
             item_description VARCHAR(50) NOT NULL,
             item_price DECIMAL(5,2) NOT NULL,
             item_image VARCHAR(50),
+            item_created_at INTEGER UNSIGNED,
+            item_deleted_at INTEGER UNSIGNED,
+            item_blocked_at INTEGER UNSIGNED,
+            item_updated_at INTEGER UNSIGNED,
             PRIMARY KEY(item_pk)
         );
         """        
@@ -311,6 +315,8 @@ try:
             "user_updated_at" : 0,
             "user_verified_at" : user_verified_at,
             "user_verification_key" : str(uuid.uuid4())
+
+            
         }
         insert_user(user)
         # assign role to restaurant users
@@ -326,11 +332,15 @@ try:
             # Generate a random integer between 1 and 100 to represent a unique identifier for a dish
             dish_id = random.randint(1, 100)
             item_description = "description"
+            item_created_at = int(time.time())
+            item_deleted_at = 0
+            item_blocked_at = 0
+            item_updated_at = 0
             cursor.execute("""
             INSERT INTO items (
-                item_pk, item_user_fk, item_title, item_description, item_price, item_image)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, (str(uuid.uuid4()), user_pk, random.choice(dishes), item_description, round(random.uniform(50, 999), 2), f"dish_{dish_id}.jpg"))                
+                item_pk, item_user_fk, item_title, item_description, item_price, item_image, item_created_at, item_deleted_at, item_blocked_at, item_updated_at)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (str(uuid.uuid4()), user_pk, random.choice(dishes), item_description, round(random.uniform(50, 999), 2), f"dish_{dish_id}.jpg", item_created_at, item_deleted_at, item_blocked_at, item_updated_at))                
 
     db.commit()
 
