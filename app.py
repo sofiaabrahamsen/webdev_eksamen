@@ -244,15 +244,14 @@ def logout():
 def create_item():
     try:
         # Check if the user is logged in
-        if not session.get("user"): 
+        if not session.get("user"):
             x.raise_custom_exception("Please login to create an item.", 401)
         # Extract the user ID from the session
         user_pk = session.get("user").get("user_pk")
-
         # Validate inputs for the item
-        item_title = x.validate_item_title()  # Custom validation for item title
-        item_description = x.validate_item_description()  # Custom validation for item description
-        item_price = x.validate_item_price()  # Custom validation for item price
+        item_title = x.validate_item_title()
+        item_description = x.validate_item_description()
+        item_price = x.validate_item_price()
         file, item_image = x.validate_item_image()  # Validate and process image file
 
         # Save the uploaded image to the designated folder
@@ -263,9 +262,6 @@ def create_item():
         item_pk = str(uuid.uuid4())  # Generate a unique identifier for the item
 
         # Insert the new item into the database
-        #q = 'INSERT INTO items VALUES(%s, %s, %s, %s, %s, %s)'
-        #cursor.execute(q, (item_pk, user_pk, item_title, item_description, item_price, item_image))
-
         q = """
             INSERT INTO items (item_pk, item_user_fk, item_title, item_description, item_price, item_image)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -278,22 +274,20 @@ def create_item():
         # Success response
         toast = render_template("___toast.html", message="Item successfully created.")
         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
-
     except Exception as ex:
         ic(ex)
         # Rollback the database transaction if there's an error
         if "db" in locals(): db.rollback()
 
-        if isinstance(ex, x.CustomException): 
+        if isinstance(ex, x.CustomException):
             toast = render_template("___toast.html", message=ex.message)
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
 
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
-            return "<template>System upgrading</template>", 500        
+            return "<template>System upgrading</template>", 500
 
-        return "<template>System under maintenance</template>", 500  
-
+        return "<template>System under maintenance</template>", 500
     finally:
         # Close database resources
         if "cursor" in locals(): cursor.close()

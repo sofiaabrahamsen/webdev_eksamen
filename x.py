@@ -127,10 +127,7 @@ def validate_item_image():
         file_extension = os.path.splitext(file.filename)[1][1:]
         ic(file_extension)
         if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS: raise_custom_exception("item_image invalid extension", 400)
-        # old
-        # filename = str(uuid.uuid4()) + file_extension
-
-        #new
+    
         filename = f"{str(uuid.uuid4())}.{file_extension}"
         return file, filename
     
