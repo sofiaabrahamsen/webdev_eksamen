@@ -33,9 +33,10 @@ def view_index():
 @app.get("/profile")
 def view_profile():
     user = session.get("user", "")
+    user_role = session.get("role_name", "")
     if not user:
         return redirect(url_for("view_index"))
-    return render_template("view_profile.html", user=user)
+    return render_template("view_profile.html", user=user, user_role=user_role)
 
 
 ##############################
