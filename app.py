@@ -260,12 +260,14 @@ def create_item():
             x.raise_custom_exception("Please login to create an item.", 401)
         # Extract the user ID from the session
         user_pk = session.get("user").get("user_pk")
+
         # Validate inputs for the item
         item_title = x.validate_item_title()
         item_description = x.validate_item_description()
         item_price = x.validate_item_price()
         file, item_image = x.validate_item_image()  # Validate and process image file
 
+        item_pk = str(uuid.uuid4())  # Generate a unique identifier for the item        
         item_created_at = int(time.time())
         item_deleted_at = 0
         item_blocked_at = 0
@@ -276,7 +278,6 @@ def create_item():
 
         # Database connection and insertion
         db, cursor = x.db()
-        item_pk = str(uuid.uuid4())  # Generate a unique identifier for the item
 
         # Insert the new item into the database
         q = """
@@ -289,6 +290,8 @@ def create_item():
         db.commit()
 
         # Success response
+        session["item"] = {"item_pk": item_pk}  # Store item_pk in the session
+
         toast = render_template("___toast.html", message="Item successfully created.")
         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
     except Exception as ex:
@@ -366,15 +369,9 @@ def item_update():
     try:
         if not session.get("user"): x.raise_custom_exception("please login", 401)
 
-        #item_pk = session.get("item").get("item_pk")
-        #if not item_pk:
-        #    x.raise_custom_exception("invalid item", 400)
-
-        # Validate item from session
-        item_data = session.get("item")
-        if not item_data or not item_data.get("item_pk"):
-            x.raise_custom_exception("Invalid item. Please refresh and try again.", 400)
-        item_pk = item_data.get("item_pk")
+        item_pk = session.get("item").get("item_pk")
+        if not item_pk:
+            x.raise_custom_exception("invalid item", 400)
     
         item_title = x.validate_item_title()
         item_description = x.validate_item_description()
@@ -438,6 +435,41 @@ def user_delete(user_pk):
         if cursor.rowcount != 1: x.raise_custom_exception("cannot delete user", 400)
         db.commit()
         return """<template>user deleted</template>"""
+    
+    except Exception as ex:
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error</template>", 500        
+        return "<template>System under maintenance</template>", 500  
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+
+##############################
+# Delete item
+##############################
+@app.delete("/items/<item_pk>")
+def item_delete(item_pk):
+    try:
+        # Check if user is logged
+        if not session.get("user", ""): return redirect(url_for("view_login"))
+        # Check if it is an admin (can delete all items). If its not the admin role then you can only delete your own items.
+        if not "admin" in session.get("user").get("roles") and session.get("item").get("item_pk") != item_pk:
+            return redirect(url_for("view_login"))
+        item_pk = x.validate_uuid4(item_pk)
+        item_deleted_at = int(time.time())
+        db, cursor = x.db()
+        q = 'UPDATE items SET item_deleted_at = %s WHERE item_pk = %s'
+        cursor.execute(q, (item_deleted_at, item_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot delete item", 400)
+        db.commit()
+        return """<template>item deleted</template>"""
     
     except Exception as ex:
         ic(ex)
