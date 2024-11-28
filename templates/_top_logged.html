@@ -11,13 +11,9 @@
     <form method="POST" action="{{url_for('logout')}}">
         <header>
             <h1 class="logo">HungerHub</h1>
-        <nav class="top_nav">
-<!-- skal have en if end ind, der kun displayer denne, hvis role != partner -->
-            <a href="/profile">Profile</a>
-
-        <button class="cta">
-            Logout
-        </button>
-    </nav>
-</header>
+            <nav class="top_nav">
+                <a class="cta" href="{{url_for('view_profile')}}">Profile</a>
+                <button class="cta">Logout</button>
+            </nav>
+        </header>
     </form>
