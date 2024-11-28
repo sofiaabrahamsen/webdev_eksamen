@@ -2,12 +2,12 @@
 
 main.index {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* 4 lige store kolonner */
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr; /* 6 lige store kolonner */
     grid-template-rows: auto auto auto; /* 3 rækker */
     grid-template-areas: 
-        "header_logo header header . . ."    /* Række 1: h1 fylder to kolonner */
-        ". . btn btn . ."          /* Række 2: btn fylder kolonne 2-3 */
-        ". . . img hub .";       /* Række 3: logo fylder kolonne 2-3 */
+        "header_logo header header . . ."    /* Række 1: h1 fylder to kolonner, logo fylder 1 */
+        ". . btn btn . ."          /* Række 2: btn fylder kolonne 3-4 */
+        ". . . img hub .";       /* Række 3: logo + p fylder kolonne 4-5 */
     gap: 3rem; /* Giver mellemrum mellem grid-items */
 }
 
