@@ -1,24 +1,28 @@
+
+{% include "_top_logged.html" %}
 {% include "_top.html" %}
-
-<h1>Customer</h1>
-{{ user }}
-
-    <form method="POST" action="{{url_for('logout')}}">
-        <button>
-            Logout
-        </button>
-    </form>
-    
-    <!-- Left side: Map -->
-    <div id="map"></div>
-    
-    <!-- Right side: items-content -->
-    <div id="items-content">
-        <h1>Items</h1>
-        <p>This is the right-side content area. Add more details here!</p>
-        <p>List of items should be displayed here with a 'more' botton</p>
-    </div>
-</body>
+        <main class="customer">
+            <!-- Left side: Map -->
+            <section id="map"></section>
+            
+            <!-- Right side: items-content -->
+            <section id="items-content">
+                <div class="search_container">
+                    <form class="search" action="/search" method="get">
+                        <div>
+                            <label class="query" for="query"></label>
+                            <input type="text" name="query" id="query" placeholder="Search">
+                        </div>
+                        <!-- midlertidig emoji -- skifter ud med billede senere -->
+                        <button type="submit">🔍</button>
+                    </form>
+                </div>
+                <h1>Items</h1>
+                <p>This is the right-side content area. Add more details here!</p>
+                <p>List of items should be displayed here with a 'more' botton</p>
+            </section>
+        </main>
+    </body>
 </html>
 
 {% include "_bottom.html" %}

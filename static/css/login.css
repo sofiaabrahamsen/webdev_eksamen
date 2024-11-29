@@ -2,15 +2,6 @@
 @import 'general.css';
 
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: var(--primary-col);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-}
 .container {
     display: flex;
     align-items: center;
