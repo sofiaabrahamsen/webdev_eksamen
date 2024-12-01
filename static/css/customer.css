@@ -45,5 +45,39 @@ label.query {
         display: none;
 }
 
+section.item_list {
+    margin: 1.5rem;
+
+    > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 2rem;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding: 0;
+
+    }
+
+    div:has(button) {
+        margin-top: 2rem;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        align-content: center;
+    }
 }
 
+ul.item_list > li {
+    list-style-type: none;
+
+    > div {
+    border-radius: 8px;
+    background-color: aliceblue;
+    padding: 4rem 7rem;
+}
+
+}
+
+}
