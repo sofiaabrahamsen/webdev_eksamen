@@ -9,6 +9,8 @@ main.index {
         ". . btn btn . ."          /* Række 2: btn fylder kolonne 3-4 */
         ". . . img hub .";       /* Række 3: logo + p fylder kolonne 4-5 */
     gap: 3rem; /* Giver mellemrum mellem grid-items */
+    padding: 1rem;
+    align-content: space-evenly;
 }
 
 /* Placer elementerne i deres grid-områder */
@@ -30,6 +32,8 @@ h1.header {
     flex-direction: row;
     justify-content: center;
     gap: 1rem;
+    flex-wrap: wrap;
+    align-content: space-around;
 }
 
 .img {

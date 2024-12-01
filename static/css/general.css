@@ -72,16 +72,6 @@ input:focus {
     width: 100%;
 }
 
-/* Content styling: takes 50% of the width */
-/* #items-content {
-    width: 100%;
-    display: flex; /* Optional: center content vertically */
-    /* flex-direction: column; Align text elements top-to-bottom */
-    /* justify-content: center; Center content vertically */
-    /* background-color: #f9f9f9; Optional background color */
-/*    padding: 3rem;
-} */
-
 /* Styles form used for profile (for all) */
 form.profile {
     display: flex;
@@ -101,16 +91,21 @@ form.profile {
     }
 }
 
-main.login, main.signup {
-    margin: 0;
-    padding: 0;
+main.login, main.signup, main.index {
     background-color: var(--primary-col);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
 }
 
+main.login, main.signup {
+    margin: 0;
+    padding: 0;
+}
+
+main.login, main.signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
 @media (min-width: 1050px) {
 
