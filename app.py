@@ -366,7 +366,7 @@ def user_update():
 ##############################
 @app.put("/users/block/<user_pk>")
 def user_block(user_pk):
-    try:        
+    try:
         if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
         user_pk = x.validate_uuid4(user_pk)
         user_blocked_at = int(time.time())
@@ -469,6 +469,67 @@ def item_update():
             return "<template>System upgrading</template>", 500
 
         return "<template>System under maintenance</template>", 500
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+
+##############################
+# Block item
+##############################
+@app.put("/items/block/<item_pk>")
+def item_block(item_pk):
+    try:
+        if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
+        item_pk = x.validate_uuid4(item_pk)
+        item_blocked_at = int(time.time())
+        db, cursor = x.db()
+        q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
+        cursor.execute(q, (item_blocked_at, item_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot block item", 400)
+        db.commit()
+        return """<template>item blocked</template>"""
+    
+    except Exception as ex:
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error</template>", 500        
+        return "<template>System under maintenance</template>", 500  
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+##############################
+# Unblock item
+##############################
+@app.put("/items/unblock/<item_pk>")
+def item_unblock(item_pk):
+    try:
+        if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
+        item_pk = x.validate_uuid4(item_pk)
+        item_blocked_at = 0
+        db, cursor = x.db()
+        q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
+        cursor.execute(q, (item_blocked_at, item_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot unblock item", 400)
+        db.commit()
+        return """<template>item unblocked</template>"""
+    
+    except Exception as ex:
+
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error</template>", 500        
+        return "<template>System under maintenance</template>", 500  
     
     finally:
         if "cursor" in locals(): cursor.close()
