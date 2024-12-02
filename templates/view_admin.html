@@ -1,9 +1,37 @@
 {% include "_top_logged.html" %}
 <main>
-<h1>Admin</h1>
-{{ user }}
-<a href="{{url_for('__users_list')}}">All items</a>
-<a href="{{url_for('__items_list')}}">All users</a>
+<h1>Hi {{user['user_name']}}</h1>
+
+
+    <section class="tab_container">
+        <div class="tabs">
+
+                <button class="tab active cta" onclick="showTab('users')">Users</button>
+                <button class="tab cta" onclick="showTab('items')">Items</button>
+
+
+        </div>
+        <div id="users" class="tab_content active">
+            <h2>Users</h2>
+            <ul>
+                {% for user in users %}
+                    <li>{{ user["user_username"] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div id="items" class="tab_content">
+            <div class="tab_header">
+                <h2>Items</h2>
+                <button class="cta">+ item</button>
+            </div>
+            <ul>
+                {% for item in items %}
+                    <li>{{ item["item_title"] }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
 </main>
 
 </body>

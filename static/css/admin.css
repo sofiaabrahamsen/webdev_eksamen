@@ -1,0 +1,36 @@
+.tab_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 2rem;
+}
+
+.tabs {
+    display: flex;
+    cursor: pointer;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.tab:hover {
+    background: var(--cta-hover-col);
+}
+
+.tab.active {
+    background: var(--cta-hover-col);
+}
+
+.tab_content {
+    display: none;
+    width: 100%;
+}
+
+.tab_content.active {
+    display: block;
+}
+
+div.tab_header:has(h2) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
