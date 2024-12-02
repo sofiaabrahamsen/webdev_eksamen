@@ -362,6 +362,66 @@ def user_update():
         if "db" in locals(): db.close()
 
 ##############################
+# Block user
+##############################
+@app.put("/users/block/<user_pk>")
+def user_block(user_pk):
+    try:        
+        if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
+        user_pk = x.validate_uuid4(user_pk)
+        user_blocked_at = int(time.time())
+        db, cursor = x.db()
+        q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
+        cursor.execute(q, (user_blocked_at, user_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot block user", 400)
+        db.commit()
+        return """<template>user blocked</template>"""
+    
+    except Exception as ex:
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error</template>", 500        
+        return "<template>System under maintenance</template>", 500  
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+##############################
+# Unblock user
+##############################
+@app.put("/users/unblock/<user_pk>")
+def user_unblock(user_pk):
+    try:
+        if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
+        user_pk = x.validate_uuid4(user_pk)
+        user_blocked_at = 0
+        db, cursor = x.db()
+        q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
+        cursor.execute(q, (user_blocked_at, user_pk))
+        if cursor.rowcount != 1: x.raise_custom_exception("cannot unblock user", 400)
+        db.commit()
+        return """<template>user unblocked</template>"""
+    
+    except Exception as ex:
+
+        ic(ex)
+        if "db" in locals(): db.rollback()
+        if isinstance(ex, x.CustomException): 
+            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.mysql.connector.Error):
+            ic(ex)
+            return "<template>Database error</template>", 500        
+        return "<template>System under maintenance</template>", 500  
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+##############################
 # Update item
 ##############################
 @app.put("/items")
