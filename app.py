@@ -38,13 +38,13 @@ def view_profile():
         return redirect(url_for("view_index"))
     return render_template("view_profile.html", user=user, user_role=user_role)
 
-
 ##############################
 # Items and map
 ##############################
 @app.get("/items")
 def view_items():
     return render_template("view_item.html")
+
 ##############################
 # Login
 ##############################
@@ -316,9 +316,7 @@ def create_item():
 ##############################
 ##############################
 ##############################
-
 def _________PUT_________(): pass
-
 ##############################
 ##############################
 ##############################
@@ -541,7 +539,6 @@ def item_unblock(item_pk):
 def ________DELETE________(): pass
 ###################################
 ###################################
-
 
 ##############################
 # Delete user
