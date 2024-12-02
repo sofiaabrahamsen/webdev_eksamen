@@ -119,7 +119,7 @@ main.login, main.signup {
         font-size: var(--font-h1-rem-desk);
     }
 
-    button {
+    .cta {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
     }
