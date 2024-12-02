@@ -8,7 +8,7 @@
     margin: 0;
 }
 
-h1, h2, .logo, .cta {
+h1, h2, .logo, .cta, .delete {
     font-family: var(--font-header);
 }
 
@@ -22,8 +22,7 @@ p, input, label, a {
     text-decoration: none;
 }
 
-.cta {
-    background-color: var(--cta-col);
+.cta, button.delete {
     color: var(--secondary-col);
     border: none;
     cursor: pointer;
@@ -31,13 +30,12 @@ p, input, label, a {
     padding: 0.75rem;
 }
 
+.cta {
+    background-color: var(--cta-col);
+}
+
 button.delete {
     background-color: var(--primary-col);
-    color: var(--secondary-col);
-    border: none;
-    cursor: pointer;
-    border-radius: var(--cta-border-radius);
-    padding: 0.75rem;
 }
 
 header {
@@ -76,6 +74,7 @@ input:focus {
 form.profile {
     display: flex;
     flex-direction: column;
+    gap: 1.2rem;
 
     > div  {
         display: flex;
@@ -119,7 +118,7 @@ main.login, main.signup {
         font-size: var(--font-h1-rem-desk);
     }
 
-    .cta {
+    .cta, .delete {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
     }

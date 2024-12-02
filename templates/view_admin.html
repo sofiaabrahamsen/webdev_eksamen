@@ -1,6 +1,10 @@
 {% include "_top_logged.html" %}
-
+<main>
 <h1>Admin</h1>
 {{ user }}
+<a href="{{url_for('__users_list')}}">All items</a>
+<a href="{{url_for('__items_list')}}">All users</a>
+</main>
+
 </body>
 </html>

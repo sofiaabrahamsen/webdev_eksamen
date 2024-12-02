@@ -11,7 +11,7 @@
     <form method="POST" action="{{url_for('logout')}}">
         <header>
             <h1 class="logo">
-                <a href="{{ url_for('view_' + user_role) if user_role else url_for('view_index') }}">HungerHub</a>
+                <a class="logo" href="{{ url_for('view_' + user_role) if user_role else url_for('view_index') }}">HungerHub</a>
             </h1>
             
             <nav class="top_nav">
