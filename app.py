@@ -47,7 +47,7 @@ def view_items():
         db, cursor = x.db()  # Connect to the database
         # Query to fetch all items and their related user (restaurant) information
         query = """
-            SELECT 
+            SELECT
                 i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
                 u.user_name AS restaurant_name
             FROM items i
