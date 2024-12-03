@@ -43,7 +43,30 @@ def view_profile():
 ##############################
 @app.get("/items")
 def view_items():
-    return render_template("view_item.html")
+    try:
+        db, cursor = x.db()  # Connect to the database
+        # Query to fetch all items and their related user (restaurant) information
+        query = """
+            SELECT 
+                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+                u.user_name AS restaurant_name
+            FROM items i
+            JOIN users u ON i.item_user_fk = u.user_pk
+            WHERE i.item_deleted_at = 0
+        """
+        cursor.execute(query)
+        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
+
+        return render_template("view_item.html", items=items)
+    
+    except Exception as ex:
+        x.ic(ex)  # Log the error for debugging
+        return "Error loading items", 500  # Return an error message if something goes wrong
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
 
 ##############################
 # Login

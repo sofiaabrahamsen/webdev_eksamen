@@ -1,13 +1,19 @@
-{% include "_top.html" %}
+{% include "_top_logged.html" %}
+<main>
+    <h1>Available Items</h1>
 
-    <!-- Left side: Map -->
-    <div id="map"></div>
-    
-    <!-- Right side: items-content -->
-    <div id="items-content">
-        <h1>Items</h1>
-        <p>This is the right-side content area. Add more details here!</p>
-        <p>List of items should be displayed here with a 'more' botton</p>
-    </div>
-
-{% include "_bottom.html" %}
+    <!-- Check if items are available -->
+    {% if items %}
+        <div class="item-list">
+            {% for item in items %}
+                <div class="item">
+                    <!-- Item Details -->
+                    <h2>{{ item.item_title }}</h2>
+                    <p><strong>Restaurant:</strong> {{ item.restaurant_name }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No items are available at the moment.</p>
+    {% endif %}
+</main>
