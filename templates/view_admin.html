@@ -1,55 +1,69 @@
 {% include "_top_logged.html" %}
-<main>
-<h1>Hi {{user['user_name']}}</h1>
+        <main>
+            <h1>Hi {{user['user_name']}}</h1>
 
+            <section class="tab_container">
+                <div class="tabs">
+                    <button class="tab active cta" onclick="showTab('users')">Users</button>
+                    <button class="tab cta" onclick="showTab('items')">Items</button>
+                </div>
 
-    <section class="tab_container">
-        <div class="tabs">
+                <div id="users" class="tab_content active">
+                    <div class="tab_header">
+                        <h2>Users</h2>
+                    </div>
+                    <!-- Check if users are available -->
+                    {% if users %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Last name</th>
+                                <th>Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                                <tr class="info">
+                                    <td>{{ user.user_name }}</td>
+                                    <td>{{ user.user_last_name }}</td>
+                                    <td>{{ user.user_email }}</td>
+                                    <td><button class="blocker">Block</button></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <p>No users are available at the moment.</p>
+                    {% endif %}
+                </div>
 
-                <button class="tab active cta" onclick="showTab('users')">Users</button>
-                <button class="tab cta" onclick="showTab('items')">Items</button>
+                <div id="items" class="tab_content">
+                    <div class="tab_header">
+                        <h2>Items</h2>
+                    </div>
 
-
-        </div>
-        <div id="users" class="tab_content active">
-            <h2>Users</h2>
-            <!-- Check if users are available -->
-    {% if users %}
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Last name</th>
-                <th>Email</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.user_name }}</td>
-                    <td>{{ user.user_last_name }}</td>
-                    <td>{{ user.user_email }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>No users are available at the moment.</p>
-{% endif %}
-        </div>
-        
-        <div id="items" class="tab_content">
-            <div class="tab_header">
-                <h2>Items</h2>
-            </div>
-            <ul>
-                {% for item in items %}
-                    <li>{{ item["item_title"] }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </section>
-</main>
-
-</body>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Restaurant</th>
+                                <th>Dish</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in items %}
+                                <tr>
+                                    <td>{{ item["restaurant_name"] }}</td>
+                                    <td>{{ item["item_title"] }}</td>
+                                    <td>{{ item["item_price"] }} Dkk</td>
+                                    <td><button class="blocker">Block</button></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </body>
 </html>

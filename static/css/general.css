@@ -9,7 +9,7 @@
     margin: 0;
 }
 
-h1, h2, .logo, .cta, .delete {
+h1, h2, .logo, .cta, .delete, .blocker {
     font-family: var(--font-header);
 }
 
@@ -21,13 +21,13 @@ h1 {
     color: var(--secondary-col);
 }
 
-p, input, label, a {
+p, input, label, a, tr {
     font-family: var(--font-body);
     color: var(--cta-col);
     text-decoration: none;
 }
 
-.cta, button.delete {
+.cta, button.delete, .blocker {
     color: var(--secondary-col);
     border: none;
     cursor: pointer;
@@ -37,6 +37,10 @@ p, input, label, a {
 
 .cta {
     background-color: var(--cta-col);
+}
+
+.blocker {
+    background-color: var(--primary-col);
 }
 
 button.delete {
@@ -133,6 +137,10 @@ main.login, main.signup {
     .cta, .delete {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
+    }
+
+    .blocker{
+        
     }
 
 
