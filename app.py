@@ -39,36 +39,6 @@ def view_profile():
     return render_template("view_profile.html", user=user, user_role=user_role)
 
 ##############################
-# Items and map
-##############################
-@app.get("/items")
-def view_items():
-    try:
-        db, cursor = x.db()  # Connect to the database
-        # Query to fetch all items and their related user (restaurant) information
-        query = """
-            SELECT
-                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
-                u.user_name AS restaurant_name
-            FROM items i
-            JOIN users u ON i.item_user_fk = u.user_pk
-            WHERE i.item_deleted_at = 0
-        """
-        cursor.execute(query)
-        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
-
-        return render_template("view_item.html", items=items)
-    
-    except Exception as ex:
-        x.ic(ex)  # Log the error for debugging
-        return "Error loading items", 500  # Return an error message if something goes wrong
-    
-    finally:
-        if "cursor" in locals(): cursor.close()
-        if "db" in locals(): db.close()
-
-
-##############################
 # Login
 ##############################
 @app.get("/login")
@@ -141,7 +111,46 @@ def view_admin():
     user = session.get("user")
     if not "admin" in user.get("roles", ""):
         return redirect(url_for("view_login"))
-    return render_template("view_admin.html", user=user)
+    
+    try:
+        db, cursor = x.db()  # Connect to the database
+
+        # Fetch all users
+        user_query = """
+            SELECT 
+                user_name, user_last_name, user_email
+            FROM users
+            WHERE user_deleted_at = 0
+        """
+        cursor.execute(user_query)
+        users = cursor.fetchall()  # Fetch all users as a list of dictionaries
+        ic(users)  # Debugging output to confirm data
+
+        # Fetch all items
+        item_query = """
+            SELECT
+                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+                u.user_name AS restaurant_name
+            FROM items i
+            JOIN users u ON i.item_user_fk = u.user_pk
+            WHERE i.item_deleted_at = 0
+        """
+        cursor.execute(item_query)
+        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
+        ic(items)  # Debugging output to confirm data
+        
+        # Pass data to the template
+        return render_template("view_admin.html", user=user, users=users, items=items)
+    
+    except Exception as ex:
+        x.ic(ex)  # Log the error for debugging
+        return "Error loading admin page", 500  # Return an error message if something goes wrong
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+
 
 ##############################
 # Choose role
