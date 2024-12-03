@@ -30,19 +30,17 @@
                             <td>{{ user.user_last_name }}</td>
                             <td>{{ user.user_email }}</td>
                             <td>
-                                {% if user["user_deleted_at"] == 0 %}
-                                    {% if user["user_blocked_at"] == 0 %}
-                                        <!-- Block Button -->
-                                        <button class="blocker" id="block-{{ user['user_pk'] }}" mix-get="/users/block/{{ user['user_pk'] }}" mix-method="put">
-                                            Block
-                                        </button>
-                                    {% else %}
-                                        <!-- Unblock Button -->
-                                        <button id="unblock-{{ user['user_pk'] }}" mix-get="/users/unblock/{{ user['user_pk'] }}" mix-method="put">
-                                            Unblock
-                                        </button>
-                                    {% endif %}
-                                {% endif %}
+                            {% if user["user_blocked_at"] == 0 %}
+                                <!-- Block Button -->
+                                <button class="blocker" id="block-{{ user['user_pk'] }}" mix-get="/users/block/{{ user['user_pk'] }}" mix-method="put" mix-target="#block-{{ user['user_pk'] }}" mix-replace>
+                                    Block
+                                </button>
+                            {% else %}
+                                <!-- Unblock Button -->
+                                <button id="unblock-{{ user['user_pk'] }}" mix-get="/users/unblock/{{ user['user_pk'] }}" mix-method="put" mix-target="#unblock-{{ user['user_pk'] }}" mix-replace>
+                                    Unblock
+                                </button>
+                            {% endif %}                            
                             </td>
                         </tr>
                     {% endfor %}
