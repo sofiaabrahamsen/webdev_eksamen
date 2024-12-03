@@ -28,7 +28,19 @@
                                     <td>{{ user.user_name }}</td>
                                     <td>{{ user.user_last_name }}</td>
                                     <td>{{ user.user_email }}</td>
-                                    <td><button class="blocker">Block</button></td>
+                                    <td>
+                                        {% if user["user_deleted_at"] == 0 %}
+                                            {% if user["user_blocked_at"] == 0 %}
+                                                <form action="{{ url_for('___btn_block_user', user_pk=user['user_pk']) }}" method="put">
+                                                    <button type="submit">Block</button>
+                                                </form>
+                                            {% else %}
+                                            <form action="{{ url_for('___btn_unblock_user', user_pk=user['user_pk']) }}" method="put">
+                                                <button type="submit">Unblock</button>
+                                            </form>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
