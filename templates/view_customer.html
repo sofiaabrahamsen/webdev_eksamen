@@ -27,26 +27,14 @@
                 <section class="item_list">
                 <!-- indsæt for item in items så den displayer li pr item-->
                     <ul class="item_list">
+
+                        {% for item in items %}
                         <li>
-                            <div>
-                                <p>Static item 1</p>
-                            </div>
+                            <p>{{ item["restaurant_name"] }}</p>
+                            <p>{{ item["item_title"] }}</p>
+                            <p>{{ item["item_price"] }} Dkk</p>
                         </li>
-                        <li>
-                            <div>
-                                <p>Static item 2</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <p>Static item 3</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div>
-                                <p>Static item 4</p>
-                            </div>
-                        </li>
+                    {% endfor %}
                     </ul>
                     <div>
                         <button class="cta">More</button>

@@ -1,8 +1,8 @@
 {% include "_top_logged.html" %}
 
         <section class="form_container">
-            <div>
-                <h2>Add/Edit Item</h2>
+            <section>
+                <h2>Add item</h2>
 
                 <form class="restaurant_item_form">
                     <div>
@@ -29,8 +29,38 @@
 
                     <button class="cta" type="button" onclick="handleSubmit()">Submit</button>
                 </form>
-            </div>
+            </section>
+
+            <!-- <section>
+                <a href="">See all items</a>
+            </section> -->
+
+            <section>
+                <h2>List of items</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dish</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                            <tr>
+                                <td>{{ item["item_title"] }}</td>
+                                <td>{{ item["item_price"] }} Dkk</td>
+                                <td><button class="blocker">Block</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section> 
+
         </section>
+
+
+
     </body>
 </html>
 

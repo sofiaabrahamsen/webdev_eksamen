@@ -1,8 +1,17 @@
-section.form_container {
+ section.form_container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    margin: 2rem;
+    justify-content: space-evenly;
+} 
+
+ /* section.form_container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 2rem;
-}
+}  */
+
 
 form.restaurant_item_form {
     display: flex;
