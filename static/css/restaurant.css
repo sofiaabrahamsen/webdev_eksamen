@@ -1,0 +1,42 @@
+ section.form_container {
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    margin: 2rem;
+    justify-content: space-evenly;
+} 
+
+ /* section.form_container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 2rem;
+}  */
+
+
+form.restaurant_item_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    
+
+    > div {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+div.image_input > input {
+    background-color: transparent;
+    border: none;
+}
+
+label {
+    margin-bottom: 0.5rem;
+}
+
+input {
+    padding: 0.5rem;
+}
+
+
+

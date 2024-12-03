@@ -3,6 +3,7 @@
 @import 'index.css';
 @import 'customer.css';
 @import 'admin.css';
+@import 'restaurant.css';
 
 
 * {
@@ -27,7 +28,7 @@ p, input, label, a, tr {
     text-decoration: none;
 }
 
-.cta, button.delete, .blocker {
+.cta, button.delete, .blocker, input::file-selector-button {
     color: var(--secondary-col);
     border: none;
     cursor: pointer;
@@ -61,11 +62,21 @@ header {
     }
 }
 
-input {
+input, textarea {
     border: 1px solid var(--tertiary-col);
     border-radius: var(--cta-border-radius);
     background-color: var(--tertiary-col);
 }
+
+textarea {
+    height: 10rem;
+    padding: 1rem;
+}
+
+input::file-selector-button {
+    color: var(--secondary-col);
+    background-color: var(--cta-col);
+  }
 
 input:focus {
     outline: none;
