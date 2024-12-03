@@ -103,7 +103,7 @@ def view_customer():
         ic(items)  # Debugging output to confirm data
         
         # Pass data to the template
-        return render_template("view_restaurant.html", user=user, items=items)
+        return render_template("view_customer.html", user=user, items=items)
     
     except Exception as ex:
         x.ic(ex)  # Log the error for debugging
@@ -189,7 +189,33 @@ def view_restaurant():
     user = session.get("user")
     if len(user.get("roles", "")) > 1:
         return redirect(url_for("view_choose_role"))
-    return render_template("view_restaurant.html", user=user)
+    
+    try:
+        db, cursor = x.db()  # Connect to the database
+
+        # Fetch all items
+        item_query = """
+            SELECT
+                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+                u.user_name AS restaurant_name
+            FROM items i
+            JOIN users u ON i.item_user_fk = u.user_pk
+            WHERE i.item_deleted_at = 0
+        """
+        cursor.execute(item_query)
+        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
+        ic(items)  # Debugging output to confirm data
+        
+        # Pass data to the template
+        return render_template("view_restaurant.html", user=user, items=items)
+    
+    except Exception as ex:
+        x.ic(ex)  # Log the error for debugging
+        return "Error loading admin page", 500  # Return an error message if something goes wrong
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
 
 ##############################
 # Choose role
