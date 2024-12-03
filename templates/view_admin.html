@@ -17,13 +17,13 @@
                 {% for user in users %}
                     <li>{{ user["user_username"] }}</li>
                 {% endfor %}
+                {{user}}
             </ul>
         </div>
         
         <div id="items" class="tab_content">
             <div class="tab_header">
                 <h2>Items</h2>
-                <button class="cta">+ item</button>
             </div>
             <ul>
                 {% for item in items %}
