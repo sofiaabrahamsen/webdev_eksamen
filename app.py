@@ -117,7 +117,7 @@ def view_admin():
 
         # Fetch all users
         user_query = """
-            SELECT 
+            SELECT
                 user_name, user_last_name, user_email
             FROM users
             WHERE user_deleted_at = 0
@@ -150,7 +150,18 @@ def view_admin():
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
-
+##############################
+# Restaurant
+##############################
+@app.get("/restaurant")
+@x.no_cache
+def view_restaurant():
+    if not session.get("user", ""):
+        return redirect(url_for("view_login"))
+    user = session.get("user")
+    if len(user.get("roles", "")) > 1:
+        return redirect(url_for("view_choose_role"))
+    return render_template("view_partner.html", user=user)
 
 ##############################
 # Choose role
