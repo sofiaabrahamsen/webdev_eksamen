@@ -1,81 +1,86 @@
 {% include "_top_logged.html" %}
-        <main>
-            <h1>Hi {{user['user_name']}}</h1>
+<main>
+    <h1>Hi {{user['user_name']}}</h1>
 
-            <section class="tab_container">
-                <div class="tabs">
-                    <button class="tab active cta" onclick="showTab('users')">Users</button>
-                    <button class="tab cta" onclick="showTab('items')">Items</button>
-                </div>
+    <section class="tab_container">
+        <div class="tabs">
+            <button class="tab active cta" onclick="showTab('users')">Users</button>
+            <button class="tab cta" onclick="showTab('items')">Items</button>
+        </div>
 
-                <div id="users" class="tab_content active">
-                    <div class="tab_header">
-                        <h2>Users</h2>
-                    </div>
-                    <!-- Check if users are available -->
-                    {% if users %}
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Last name</th>
-                                <th>Email</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for user in users %}
-                                <tr class="info">
-                                    <td>{{ user.user_name }}</td>
-                                    <td>{{ user.user_last_name }}</td>
-                                    <td>{{ user.user_email }}</td>
-                                    <td>
-                                        {% if user["user_deleted_at"] == 0 %}
-                                            {% if user["user_blocked_at"] == 0 %}
-                                                <form action="{{ url_for('___btn_block_user', user_pk=user['user_pk']) }}" method="put">
-                                                    <button type="submit">Block</button>
-                                                </form>
-                                            {% else %}
-                                            <form action="{{ url_for('___btn_unblock_user', user_pk=user['user_pk']) }}" method="put">
-                                                <button type="submit">Unblock</button>
-                                            </form>
-                                            {% endif %}
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% else %}
-                        <p>No users are available at the moment.</p>
-                    {% endif %}
-                </div>
+        <div id="users" class="tab_content active">
+            <div class="tab_header">
+                <h2>Users</h2>
+            </div>
+            <!-- Check if users are available -->
+            {% if users %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last name</th>
+                        <th>Email</th>
+                        <th>Block/unblock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr class="info">
+                            <td>{{ user.user_name }}</td>
+                            <td>{{ user.user_last_name }}</td>
+                            <td>{{ user.user_email }}</td>
+                            <td>
+                                {% if user["user_deleted_at"] == 0 %}
+                                    {% if user["user_blocked_at"] == 0 %}
+                                        <!-- Block Button -->
+                                        <button class="blocker" id="block-{{ user['user_pk'] }}" mix-get="/users/block/{{ user['user_pk'] }}" mix-method="put">
+                                            Block
+                                        </button>
+                                    {% else %}
+                                        <!-- Unblock Button -->
+                                        <button id="unblock-{{ user['user_pk'] }}" mix-get="/users/unblock/{{ user['user_pk'] }}" mix-method="put">
+                                            Unblock
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p>No users are available at the moment.</p>
+            {% endif %}
+        </div>
 
-                <div id="items" class="tab_content">
-                    <div class="tab_header">
-                        <h2>Items</h2>
-                    </div>
+        <div id="items" class="tab_content">
+            <div class="tab_header">
+                <h2>Items</h2>
+            </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Restaurant</th>
-                                <th>Dish</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in items %}
-                                <tr>
-                                    <td>{{ item["restaurant_name"] }}</td>
-                                    <td>{{ item["item_title"] }}</td>
-                                    <td>{{ item["item_price"] }} Dkk</td>
-                                    <td><button class="blocker">Block</button></td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </main>
-    </body>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Restaurant</th>
+                        <th>Dish</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item["restaurant_name"] }}</td>
+                            <td>{{ item["item_title"] }}</td>
+                            <td>{{ item["item_price"] }} Dkk</td>
+                            <td><button class="blocker">Block</button></td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+</body>
 </html>
+
+{% include "_bottom.html" %}

@@ -161,7 +161,7 @@ def view_restaurant():
     user = session.get("user")
     if len(user.get("roles", "")) > 1:
         return redirect(url_for("view_choose_role"))
-    return render_template("view_partner.html", user=user)
+    return render_template("view_restaurant.html", user=user)
 
 ##############################
 # Choose role
@@ -416,7 +416,9 @@ def user_block(user_pk):
         cursor.execute(q, (user_blocked_at, user_pk))
         if cursor.rowcount != 1: x.raise_custom_exception("cannot block user", 400)
         db.commit()
-        return """<template>user blocked</template>"""
+        # Return the updated block button
+        btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
+        return f"""<template mix-target="#block-{user_pk}" mix-replace>{btn_block}</template>"""
     
     except Exception as ex:
         ic(ex)
@@ -427,9 +429,11 @@ def user_block(user_pk):
             ic(ex)
             return "<template>Database error</template>", 500        
         return "<template>System under maintenance</template>", 500  
+    
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
 
 ##############################
 # Unblock user
@@ -438,22 +442,18 @@ def user_block(user_pk):
 def user_unblock(user_pk):
     try:
         if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
-        user = {
-            "user_pk" : x.validate_uuid4(user_pk)
-        }
+        user_pk = x.validate_uuid4(user_pk)
         user_blocked_at = 0
         db, cursor = x.db()
         q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
         cursor.execute(q, (user_blocked_at, user_pk))
         if cursor.rowcount != 1: x.raise_custom_exception("cannot unblock user", 400)
         db.commit()
-        btn_block = render_template("___btn_block_user.html", user=user)
-        return f"""
-                <template mix-target='#unblock-{user_pk}' mix-replace>
-                    {btn_block} </template>
-                """
+        # Return the updated unblock button
+        btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
+        return f"""<template mix-target="#unblock-{user_pk}" mix-replace>{btn_block}</template>"""
+    
     except Exception as ex:
-
         ic(ex)
         if "db" in locals(): db.rollback()
         if isinstance(ex, x.CustomException): 
@@ -466,6 +466,7 @@ def user_unblock(user_pk):
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
 
 ##############################
 # Update item
