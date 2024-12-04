@@ -1,17 +1,68 @@
- section.form_container {
+ /* Restaurant homepage */
+
+section.restaurant_list {
+    margin: 2rem;
+    display: grid;
+}
+
+.restaurant_list_top {
     display: flex;
     flex-direction: row;
-    gap: 2rem;
-    margin: 2rem;
-    justify-content: space-evenly;
-} 
+    justify-content: space-between;
+}
 
- /* section.form_container {
+table.restaurant_list {
+    width: 100%; /* Table spans the full width of the container */
+    border-collapse: collapse; /* Remove space between table cells */
+}
+
+thead.restaurant_list_head tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    text-align: left;
+    padding: 1.1rem;
+}
+
+
+tbody.restaurant_list_body tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; /* Make each row behave like a block element */
+    margin-bottom: 10px; /* Add space between rows */
+    border: 1px solid #ddd; /* Optional: Add a border around rows */
+    border-radius: 8px; /* Optional: Round the edges for a card-like effect */
+    padding: 0.6rem; /* Add padding inside each row */
+    background-color: var(--tertiary-col); /* Optional: Background color for rows */
+
+    > td {
+        align-self: center;
+        text-align: left;
+    }
+
+    > td:last-child, td:nth-child(3) {
+        text-align: end;
+    }
+}
+
+tbody.restaurant_list_body tr:hover {
+    background-color: var(--cta-hover-col); /* Optional: Add a hover effect */
+    color: var(--secondary-col);
+    cursor: pointer;
+}
+
+tbody.restaurant_list_body td::before {
+    content: attr(data-label); /* Use a custom label before the data */
+    display: inline-block; /* Align the label inline */
+    margin-right: 10px; /* Add space between label and value */
+}
+
+
+ /* Restaurant add item */
+ 
+ section.form_container {
     display: grid;
     grid-template-columns: 1fr 1fr;
     margin: 2rem;
-}  */
-
+}
 
 form.restaurant_item_form {
     display: flex;
@@ -38,5 +89,5 @@ input {
     padding: 0.5rem;
 }
 
-
+ /* Restaurant edit item */
 

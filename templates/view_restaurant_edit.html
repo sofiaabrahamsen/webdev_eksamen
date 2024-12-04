@@ -1,0 +1,36 @@
+{% include "_top_logged.html" %}
+
+            <main>
+                <section class="form_container">
+                    <h2>Edit item</h2>
+
+                    <form class="restaurant_item_form">
+                        <div>
+                            <label for="itemName">Item name</label>
+                            <input type="text" id="itemName" name="itemName" required>
+                        </div>
+
+                        <div>
+                            <label for="itemDescription">Description</label>
+                            <textarea id="itemDescription" name="itemDescription" required></textarea>
+                        </div>
+
+                        <div>
+                            <label for="itemPrice">Price</label>
+                            <input type="text" id="itemPrice" name="itemPrice" required>
+                        </div>
+
+                        <div class="image_input">
+                            <label for="itemImages">Upload images</label>
+                            <input type="file" id="itemImages" name="itemImages" multiple accept="image/*" required>
+                        </div>
+                        
+                        <div class="image-preview" id="imagePreview"></div>
+
+                        <button class="cta center" type="button" onclick="handleSubmit()">Submit</button>
+                    </form>
+                </section>
+            </main>
+        </body>
+    </html>      
+{% include "_bottom.html" %}

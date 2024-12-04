@@ -218,6 +218,16 @@ def view_restaurant():
         if "db" in locals(): db.close()
 
 ##############################
+# Restaurant / edit item
+##############################
+@app.get("/edit-item/<item_pk>")
+def view_edit_item(item_pk):
+    # Hent data om elementet fra databasen baseret på `item_id`
+    # Passér dette til template som context
+    return render_template("view_restaurant_edit.html", item_pk=item_pk)
+
+
+##############################
 # Choose role
 ##############################
 @app.get("/choose-role")
