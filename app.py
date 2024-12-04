@@ -230,6 +230,13 @@ def view_choose_role():
     user = session.get("user")
     return render_template("view_choose_role.html", user=user, title="Choose role")
 
+##############################
+# View restaurant add item
+##############################
+@app.get("/view_restaurant_add")
+def view_restaurant_add():
+    return render_template("view_restaurant_add.html")
+
 ###################################
 ###################################
 def _________POST_________(): pass
@@ -463,7 +470,7 @@ def user_update():
 def user_block(user_pk):
     try:
         # Check if the user is an admin
-        if not "admin" in session.get("user").get("roles"): 
+        if not "admin" in session.get("user").get("roles"):
             return redirect(url_for("view_login"))
         
         # Validate the user_pk

@@ -120,7 +120,7 @@ ALLOWED_ITEM_FILE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 def validate_item_image():
     if 'item_image' not in request.files: raise_custom_exception("item_image missing", 400)
     file = request.files.get("item_image", "")
-    if file.filename == "": raise_custom_exception("item_image name invalid", 400)
+    if file.filename == "": raise_custom_exception("item_image field is empthy", 400)
 
     if file:
         ic(file.filename)
