@@ -1,30 +1,32 @@
 {% include "_top_logged.html" %}
 
-        <section class="restaurant_list">
-            <div class="restaurant_list_top">
-                <h2>List of items</h2>
-                <a href="" class="cta center">+ item</a>
-            </div>
+        <main>
+            <section class="restaurant_list">
+                <div class="restaurant_list_top">
+                    <h2>List of items</h2>
+                    <a href="" class="cta center">+ item</a>
+                </div>
 
-            <table>
-                <thead class="restaurant_list_head">
-                    <tr>
-                        <th>Dish</th>
-                        <th>Price</th>
-                    </tr>
-                </thead>
-                <tbody class="restaurant_list_body">
-                    {% for item in items %}
+                <table>
+                    <thead class="restaurant_list_head">
                         <tr>
-                            <td>{{ item["item_title"] }}</td>
-                            <td>{{ item["item_price"] }} Dkk</td>
-                            <td><a class="edit" href="">Edit</a></td>
-                            <td><button class="blocker">Block</button></td>
+                            <th>Dish</th>
+                            <th>Price</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section> 
+                    </thead>
+                    <tbody class="restaurant_list_body">
+                        {% for item in items %}
+                            <tr>
+                                <td>{{ item["item_title"] }}</td>
+                                <td>{{ item["item_price"] }} Dkk</td>
+                                <td><a class="edit" href="">Edit</a></td>
+                                <td><button class="blocker">Block</button></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section> 
+        </main>
     </body>
 </html>
 
