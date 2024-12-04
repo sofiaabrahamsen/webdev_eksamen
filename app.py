@@ -241,11 +241,21 @@ def view_choose_role():
     return render_template("view_choose_role.html", user=user, title="Choose role")
 
 ##############################
-# View restaurant add item
+# View restaurant add an item
 ##############################
-@app.get("/view_restaurant_add")
+@app.get("/add-item")
 def view_restaurant_add():
     return render_template("view_restaurant_add.html")
+
+##############################
+# View restaurant edit an item
+##############################
+@app.get("/edit-item")
+def view_restaurant_edit():
+    item = session.get("item", "")
+    if not item:
+        return redirect(url_for("view_restaurant.html"))
+    return render_template("view_restaurant_edit.html", item=item)
 
 ###################################
 ###################################
