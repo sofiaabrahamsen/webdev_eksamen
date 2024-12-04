@@ -3,11 +3,11 @@
             <main>
                 <section class="form_container">
                     <h2>Edit item</h2>
-
+                    {{ item_pk }}
                     <form class="restaurant_item_form">
                         <div>
                             <label for="itemName">Item name</label>
-                            <input type="text" id="itemName" name="itemName" required value="{{item['item_title']}}">
+                            <input type="text" id="itemName" name="itemName" required value="{{item_pk['item_title']}}">
                         </div>
 
                         <div>

@@ -252,10 +252,10 @@ def view_restaurant_add():
 ##############################
 @app.get("/edit-item")
 def view_restaurant_edit():
-    item = session.get("item", "")
-    if not item:
-        return redirect(url_for("view_restaurant"))
-    return render_template("view_restaurant_edit", item=item)
+    item_pk = request.args.get("item_pk")
+    if not item_pk:
+        x.raise_custom_exception("invalid item", 400)
+    return render_template("view_restaurant_edit.html", item_pk=item_pk)
 
 ###################################
 ###################################
