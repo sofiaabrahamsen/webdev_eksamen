@@ -1,3 +1,5 @@
+/* Customer homepage */
+
 @media (min-width: 1050px) {
 
 main.customer {
@@ -81,4 +83,42 @@ ul.item_list > li {
 
 }
 
+}
+
+/* Customer singleview */
+
+.customer_single {
+    display: grid;
+    grid-template-columns: 1fr;
+
+    > ul {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+    }
+}
+
+.customer_single > ul > li {
+    border-radius: 10px;
+    padding: 5rem 7rem;
+    list-style-type: none;
+    background-color: var(--tertiary-col);
+    display: grid;
+}
+
+.buy {
+    color: var(--secondary-col);
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    border-radius: var(--cta-border-radius);
+    padding: 0.25rem;
+}
+
+@media (min-width: 1050px) {
+    .buy {
+        font-size: var(--font-body-rem-desk-mid);
+    }
 }

@@ -41,7 +41,7 @@ p, input, label, a, tr {
     align-self: center;
 }
 
-.cta, .edit {
+.cta, .edit, .buy {
     background-color: var(--cta-col);
 }
 
