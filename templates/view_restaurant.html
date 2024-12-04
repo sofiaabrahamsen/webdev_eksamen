@@ -19,7 +19,7 @@
                             <tr>
                                 <td>{{ item["item_title"] }}</td>
                                 <td>{{ item["item_price"] }} Dkk</td>
-                                <td><a class="edit" href="">Edit</a></td>
+                                <td><a class="edit"href="{{url_for('view_restaurant_edit')}}">Edit</a></td>
                                 <td><button class="blocker">Block</button></td>
                             </tr>
                         {% endfor %}
