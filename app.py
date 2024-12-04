@@ -254,8 +254,8 @@ def view_restaurant_add():
 def view_restaurant_edit():
     item = session.get("item", "")
     if not item:
-        return redirect(url_for("view_restaurant.html"))
-    return render_template("view_restaurant_edit.html", item=item)
+        return redirect(url_for("view_restaurant"))
+    return render_template("view_restaurant_edit", item=item)
 
 ###################################
 ###################################
