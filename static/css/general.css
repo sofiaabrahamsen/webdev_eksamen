@@ -32,10 +32,13 @@ p, input, label, a, tr {
     color: var(--secondary-col);
     border: none;
     text-align: center;
-    align-self: center;
     cursor: pointer;
     border-radius: var(--cta-border-radius);
     padding: 0.75rem;
+}
+
+.center {
+    align-self: center;
 }
 
 .cta, .edit {

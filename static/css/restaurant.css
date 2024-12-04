@@ -59,11 +59,9 @@ tbody.restaurant_list_body td::before {
  /* Restaurant add item */
  
  section.form_container {
-    display: flex;
-    flex-direction: row;
-    gap: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     margin: 2rem;
-    justify-content: space-evenly;
 }
 
 form.restaurant_item_form {
@@ -91,5 +89,5 @@ input {
     padding: 0.5rem;
 }
 
-
+ /* Restaurant edit item */
 
