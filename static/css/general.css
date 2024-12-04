@@ -31,6 +31,8 @@ p, input, label, a, tr {
 .cta, button.delete, .blocker, .edit, input::file-selector-button {
     color: var(--secondary-col);
     border: none;
+    text-align: center;
+    align-self: center;
     cursor: pointer;
     border-radius: var(--cta-border-radius);
     padding: 0.75rem;
