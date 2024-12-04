@@ -10,7 +10,7 @@
     margin: 0;
 }
 
-h1, h2, .logo, .cta, .delete, .blocker {
+h1, h2, .logo, .cta, .delete, .blocker, .edit {
     font-family: var(--font-header);
 }
 
@@ -28,7 +28,7 @@ p, input, label, a, tr {
     text-decoration: none;
 }
 
-.cta, button.delete, .blocker, input::file-selector-button {
+.cta, button.delete, .blocker, .edit, input::file-selector-button {
     color: var(--secondary-col);
     border: none;
     cursor: pointer;
@@ -36,7 +36,7 @@ p, input, label, a, tr {
     padding: 0.75rem;
 }
 
-.cta {
+.cta, .edit {
     background-color: var(--cta-col);
 }
 
@@ -148,10 +148,6 @@ main.login, main.signup {
     .cta, .delete {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
-    }
-
-    .blocker{
-        
     }
 
 
