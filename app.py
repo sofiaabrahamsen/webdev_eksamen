@@ -244,6 +244,7 @@ def view_choose_role():
 # View restaurant add an item
 ##############################
 @app.get("/add-item")
+@x.no_cache
 def view_restaurant_add():
     return render_template("view_restaurant_add.html")
 
