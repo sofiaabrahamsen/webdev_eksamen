@@ -194,7 +194,7 @@ def view_restaurant():
         db, cursor = x.db()  # Connect to the database
 
         # Fetch all items
-        item_query = """
+        q = """
             SELECT
                 i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
                 u.user_name AS restaurant_name
@@ -202,7 +202,7 @@ def view_restaurant():
             JOIN users u ON i.item_user_fk = u.user_pk
             WHERE i.item_deleted_at = 0
         """
-        cursor.execute(item_query)
+        cursor.execute(q)
         items = cursor.fetchall()  # Fetch all items as a list of dictionaries
         ic(items)  # Debugging output to confirm data
         
@@ -216,16 +216,6 @@ def view_restaurant():
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
-
-##############################
-# Restaurant / edit item
-##############################
-@app.get("/edit-item/<item_pk>")
-def view_edit_item(item_pk):
-    # Hent data om elementet fra databasen baseret på `item_id`
-    # Passér dette til template som context
-    return render_template("view_restaurant_edit.html", item_pk=item_pk)
-
 
 ##############################
 # Choose role
@@ -251,18 +241,16 @@ def view_restaurant_add():
 ##############################
 # View restaurant edit an item
 ##############################
-@app.get("/edit-item")
+@app.get("/edit-item/<item_pk>")
 @x.no_cache
-def view_restaurant_edit():
-    item_pk = request.args.get("item_pk")  # Get item_pk from query parameters
-    if not item_pk:
-        x.raise_custom_exception("Invalid item", 400)
-
+def view_restaurant_edit(item_pk):
+    if not session.get("user"):
+        return redirect(url_for("view_login"))
     try:
-        db, cursor = x.db()  # Connect to the database
+        db, cursor = x.db()
         
-        # Query for the specific item
-        item_query = """
+        # Fetch the specific item data from the database
+        q = """
             SELECT
                 i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
                 u.user_name AS restaurant_name
@@ -270,18 +258,21 @@ def view_restaurant_edit():
             JOIN users u ON i.item_user_fk = u.user_pk
             WHERE i.item_pk = %s AND i.item_deleted_at = 0
         """
-        cursor.execute(item_query, (item_pk,))
-        item = cursor.fetchone()  # Fetch the single item
-        
+        cursor.execute(q, (item_pk,))
+        item = cursor.fetchone()
+
         if not item:
             x.raise_custom_exception("Item not found", 404)
         
-        # Pass the item data to the template
+        # Store the item_pk in the session
+        session["item"] = {"item_pk": item_pk}
+        
+        # Pass item data to the template
         return render_template("view_restaurant_edit.html", item=item)
     
     except Exception as ex:
-        x.ic(ex)  # Log the error for debugging
-        return "Error loading edit page", 500  # Return an error message if something goes wrong
+        x.ic(ex)
+        return "Error loading edit page", 500
     
     finally:
         if "cursor" in locals(): cursor.close()
@@ -601,18 +592,21 @@ def user_unblock(user_pk):
 def item_update():
     try:
         if not session.get("user"): x.raise_custom_exception("please login", 401)
+
         # Get the item_pk from the session
         item_pk = session.get("item").get("item_pk")
         if not item_pk:
+            ic("item_pk not found in session")
             x.raise_custom_exception("invalid item", 400)
-        # validate inputs for updating fields
+        
+        # validate inputs for form data
         item_title = x.validate_item_title()
         item_description = x.validate_item_description()
         item_price = x.validate_item_price()
         item_updated_at = int(time.time())
+        
         # Validate and process the new image if provided
-        # `optional=True` allows for no image
-        file, item_image = x.validate_item_image() 
+        file, item_image = x.validate_item_image()
         # Save the new image file
         file.save(os.path.join(x.UPLOAD_ITEM_FOLDER, item_image))
 
@@ -632,7 +626,6 @@ def item_update():
         ic(ex)
         # Rollback the database transaction if there's an error
         if "db" in locals(): db.rollback()
-
         if isinstance(ex, x.CustomException):
             toast = render_template("___toast.html", message=ex.message)
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    

@@ -3,33 +3,30 @@
             <main>
                 <section class="form_container">
                     <h2>Edit item</h2>
-                    <form class="restaurant_item_form" id="frm_edit_item">
+                    <form id="frm_edit_item" class="restaurant_item_form">
                         <div>
-                            <label for="itemTitle">Item title</label>
-                            <input type="text" id="itemTitle" name="itemTitle" value="{{item['item_title']}}">
+                            <label for="item_title">Item title</label>
+                            <input type="text" id="item_title" name="item_title" value="{{item['item_title']}}">
                         </div>
 
                         <div>
-                            <label for="itemDescription">Description</label>
-                            <input id="itemDescription" name="itemDescription" value="{{item['item_description']}}"></input>
+                            <label for="item_description">Description</label>
+                            <input id="item_description" name="item_description" value="{{item['item_description']}}"></input>
                         </div>
 
                         <div>
-                            <label for="itemPrice">Price</label>
-                            <input type="text" id="itemPrice" name="itemPrice" value="{{item['item_price']}}">
+                            <label for="item_price">Price</label>
+                            <input type="text" id="item_price" name="item_price" value="{{item['item_price']}}">
                         </div>
 
                         <div class="image_input">
-                            <label for="itemImages">Upload images</label>
-                            <input type="file" id="itemImages" name="itemImages" multiple accept="image/*">
+                            <label for="item_images">Upload images</label>
+                            <input type="file" id="item_images" name="item_images" multiple accept="image/*">
                         </div>
-                        
-                        <div class="image-preview" id="imagePreview"></div>
 
-                        <button class="cta center" mix-put="/items" mix-data="#frm_edit_item" >Submit</button>
+                        <button class="cta center" mix-put="/items" mix-data="#frm_edit_item">Submit</button>
                     </form>
                 </section>
             </main>
-        </body>
-    </html>      
+            
 {% include "_bottom.html" %}
