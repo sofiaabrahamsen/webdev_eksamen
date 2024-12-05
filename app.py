@@ -251,11 +251,41 @@ def view_restaurant_add():
 # View restaurant edit an item
 ##############################
 @app.get("/edit-item")
+@x.no_cache
 def view_restaurant_edit():
-    item_pk = request.args.get("item_pk")
+    item_pk = request.args.get("item_pk")  # Get item_pk from query parameters
     if not item_pk:
-        x.raise_custom_exception("invalid item", 400)
-    return render_template("view_restaurant_edit.html", item_pk=item_pk)
+        x.raise_custom_exception("Invalid item", 400)
+
+    try:
+        db, cursor = x.db()  # Connect to the database
+        
+        # Query for the specific item
+        item_query = """
+            SELECT
+                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+                u.user_name AS restaurant_name
+            FROM items i
+            JOIN users u ON i.item_user_fk = u.user_pk
+            WHERE i.item_pk = %s AND i.item_deleted_at = 0
+        """
+        cursor.execute(item_query, (item_pk,))
+        item = cursor.fetchone()  # Fetch the single item
+        
+        if not item:
+            x.raise_custom_exception("Item not found", 404)
+        
+        # Pass the item data to the template
+        return render_template("view_restaurant_edit.html", item=item)
+    
+    except Exception as ex:
+        x.ic(ex)  # Log the error for debugging
+        return "Error loading edit page", 500  # Return an error message if something goes wrong
+    
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
 
 ###################################
 ###################################
