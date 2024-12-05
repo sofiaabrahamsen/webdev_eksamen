@@ -236,7 +236,7 @@ def view_choose_role():
 @app.get("/add-item")
 @x.no_cache
 def view_restaurant_add():
-    return render_template("view_restaurant_add.html")
+    return render_template("view_restaurant_add.html", x=x)
 
 ##############################
 # View restaurant edit an item
@@ -268,7 +268,7 @@ def view_restaurant_edit(item_pk):
         session["item"] = {"item_pk": item_pk}
         
         # Pass item data to the template
-        return render_template("view_restaurant_edit.html", item=item)
+        return render_template("view_restaurant_edit.html", item=item, x=x)
     
     except Exception as ex:
         x.ic(ex)
@@ -399,6 +399,7 @@ def logout():
 # Create item
 ##############################
 @app.post("/items")
+@x.no_cache
 def create_item():
     try:
         # Check if the user is logged in

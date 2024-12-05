@@ -154,7 +154,8 @@ def validate_item_description():
 ##############################
 ITEM_PRICE_MIN = Decimal('0.01')
 ITEM_PRICE_MAX = Decimal('10000.00')
-ITEM_PRICE_REGEX = f"^.{{{ITEM_PRICE_MIN},{ITEM_PRICE_MAX}}}$"
+# allows numbers up to 5 digits before the decimal. Optional decimal with up to 2 digits
+ITEM_PRICE_REGEX = r"^\d{1,5}(\.\d{1,2})?$"  # Match numbers like 12345.67, 12, 123.4
 def validate_item_price():
     error = f"Price must be a valid number between {ITEM_PRICE_MIN} and {ITEM_PRICE_MAX}"
     item_price_str = request.form.get("item_price", "").strip()

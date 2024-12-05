@@ -5,34 +5,30 @@
                     <div>
                         <h2>Add item</h2>
 
-                        <form class="restaurant_item_form" id="frm_item_add">
+                        <form class="restaurant_item_form" id="frm_item_add" enctype="multipart/form-data">
                             <div>
-                                <label for="itemName">Item name</label>
-                                <input type="text" id="itemName" name="itemName" mix-check="{{ x.ITEM_TITLE_REGEX }}" required >
+                                <label for="item_title">Item name</label>
+                                <input type="text" name="item_title" mix-check="{{ x.ITEM_TITLE_REGEX }}" required >
                             </div>
 
                             <div>
-                                <label for="itemDescription">Description</label>
-                                <textarea id="itemDescription" name="itemDescription" mix-check="{{ x.ITEM_DESCRIPTION_REGEX }}" required></textarea>
+                                <label for="item_description">Description</label>
+                                <textarea  name="item_description" mix-check="{{ x.ITEM_DESCRIPTION_REGEX }}" required></textarea>
                             </div>
 
                             <div>
-                                <label for="itemPrice">Price</label>
-                                <input type="text" id="itemPrice" name="itemPrice" mix-check="{{ x.ITEM_PRICE_REGEX }}" required>
+                                <label for="item_price">Price</label>
+                                <input type="number" name="item_price" step="0.01" min="{{ x.ITEM_PRICE_MIN }}" max="{{ x.ITEM_PRICE_MAX }}" mix-check="{{ x.ITEM_PRICE_REGEX }}" required>
                             </div>
 
                             <div class="image_input">
-                                <label for="itemImages">Upload images</label>
-                                <input type="file" id="itemImages" name="itemImages" multiple accept="image/*" mix-check="{{ x.UPLOAD_ITEM_FOLDER, x.ALLOWED_ITEM_FILE_EXTENSIONS }}" required>
+                                <label for="item_image">Upload image</label>
+                                <input type="file" name="item_image" multiple accept=".png, .jpg, .jpeg, .gif" mix-check="{{ x.ALLOWED_ITEM_FILE_EXTENSIONS }}" required>
                             </div>
-                            
-                            <div class="image-preview" id="imagePreview"></div>
-
+                  
                             <button class="cta" mix-post="/items" mix-data="#frm_item_add">Add item</button>
                         </form>
                     </div>
                 </section>
             </main>
-        </body>
-    </html>      
 {% include "_bottom.html" %}
