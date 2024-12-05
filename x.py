@@ -154,6 +154,7 @@ def validate_item_description():
 ##############################
 ITEM_PRICE_MIN = Decimal('0.01')
 ITEM_PRICE_MAX = Decimal('10000.00')
+ITEM_PRICE_REGEX = f"^.{{{ITEM_PRICE_MIN},{ITEM_PRICE_MAX}}}$"
 def validate_item_price():
     error = f"Price must be a valid number between {ITEM_PRICE_MIN} and {ITEM_PRICE_MAX}"
     item_price_str = request.form.get("item_price", "").strip()
@@ -164,6 +165,5 @@ def validate_item_price():
         # Raise error if conversion to Decimal fails
         raise_custom_exception("Price must be a valid decimal number", 400)
     # Check if the price is within the allowed range
-    if not (ITEM_PRICE_MIN <= item_price <= ITEM_PRICE_MAX):
-        raise_custom_exception(error, 400)
+    if not re.match(ITEM_PRICE_REGEX, item_price): raise_custom_exception(error, 400)
     return item_price
