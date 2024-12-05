@@ -447,15 +447,16 @@ def create_item():
         # Success response
         session["item"] = {"item_pk": item_pk}  # Store item_pk in the session
 
-        toast = render_template("___toast.html", message="Item successfully created.")
+        toast = render_template("___toast.html", message="Item successfully created.", x=x)
         return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
+    
     except Exception as ex:
         ic(ex)
         # Rollback the database transaction if there's an error
         if "db" in locals(): db.rollback()
 
         if isinstance(ex, x.CustomException):
-            toast = render_template("___toast.html", message=ex.message)
+            toast = render_template("___toast.html", message=ex.message, x=x)
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
 
         if isinstance(ex, x.mysql.connector.Error):
