@@ -18,7 +18,7 @@ table.restaurant_list {
 
 thead.restaurant_list_head tr {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     text-align: left;
     padding: 1.1rem;
 }
@@ -26,7 +26,7 @@ thead.restaurant_list_head tr {
 
 tbody.restaurant_list_body tr {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr; /* Make each row behave like a block element */
+    grid-template-columns: 1fr 1fr 1fr; /* Make each row behave like a block element */
     margin-bottom: 10px; /* Add space between rows */
     border: 1px solid #ddd; /* Optional: Add a border around rows */
     border-radius: 8px; /* Optional: Round the edges for a card-like effect */
@@ -39,7 +39,7 @@ tbody.restaurant_list_body tr {
         padding: 0.5rem;
     }
 
-    > td:last-child, td:nth-child(3) {
+    > td:last-child {
         text-align: end;
     }
 }
@@ -89,6 +89,4 @@ label {
 input {
     padding: 0.5rem;
 }
-
- /* Restaurant edit item */
 
