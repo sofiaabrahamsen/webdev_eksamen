@@ -489,7 +489,8 @@ def user_update():
         cursor.execute(q, (user_name, user_last_name, user_email, user_updated_at, user_pk))
         if cursor.rowcount != 1: x.raise_custom_exception("cannot update user", 401)
         db.commit()
-        return """<template>user updated</template>"""
+        toast = render_template("___toast.html", message="User updated")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>"""
     
     except Exception as ex:
         ic(ex)
