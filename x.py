@@ -162,7 +162,8 @@ def validate_item_description():
 
 ##############################
 ITEM_PRICE_MIN = Decimal('0.01')
-ITEM_PRICE_MAX = Decimal('99999.99')
+ITEM_PRICE_MAX = Decimal('9999.99')
+# number between 0.01 and 9999,99
 ITEM_PRICE_REGEX = "^(?:0(?:\.[1-9]\d?)?|(?:[1-9]\d{0,3})(?:\.\d{1,2})?)$"
 def validate_item_price():
     error = f"Price must be a valid number between {ITEM_PRICE_MIN} and {ITEM_PRICE_MAX}"
