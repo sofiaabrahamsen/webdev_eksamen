@@ -302,10 +302,10 @@ def login():
         rows = cursor.fetchall()
         if not rows:
             toast = render_template("___toast.html", message="user not registered")
-            return f"""<template mix-target="#toast">{toast}</template>""", 400
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
         if not check_password_hash(rows[0]["user_password"], user_password):
             toast = render_template("___toast.html", message="invalid credentials")
-            return f"""<template mix-target="#toast">{toast}</template>""", 401
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
         roles = []
         for row in rows:
             roles.append(row["role_name"])
