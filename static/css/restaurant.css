@@ -38,7 +38,7 @@ tbody.restaurant_list_body tr {
         text-align: left;
     }
 
-    > td:last-child, td:nth-child(3) {
+    > td:last-child {
         text-align: end;
     }
 }
