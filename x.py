@@ -118,18 +118,26 @@ UPLOAD_ITEM_FOLDER = './images'
 ALLOWED_ITEM_FILE_EXTENSIONS = {"png", "jpg", "jpeg", "gif"}
 
 def validate_item_image():
-    if 'item_image' not in request.files: raise_custom_exception("item_image missing", 400)
-    file = request.files.get("item_image", "")
-    if file.filename == "": raise_custom_exception("item_image field is empthy", 400)
+    # Ensure 'item_image' is in request.files
+    if 'item_image' not in request.files:
+        raise_custom_exception("item_image missing", 400)
 
-    if file:
-        ic(file.filename)
-        file_extension = os.path.splitext(file.filename)[1][1:]
-        ic(file_extension)
-        if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS: raise_custom_exception("item_image invalid extension", 400)
-    
-        filename = f"{str(uuid.uuid4())}.{file_extension}"
-        return file, filename
+    # Get the uploaded file
+    file = request.files.get("item_image", None)
+    if not file or file.filename.strip() == "":
+        raise_custom_exception("item_image name invalid", 400)
+
+    # Extract the file extension
+    file_extension = os.path.splitext(file.filename)[1][1:].lower()  # Get extension without '.'
+    if not file_extension:
+        raise_custom_exception("item_image has no valid extension", 400)
+    if file_extension not in ALLOWED_ITEM_FILE_EXTENSIONS:
+        raise_custom_exception("item_image invalid extension", 400)
+
+    # Generate a safe filename
+    filename = f"{uuid.uuid4()}.{file_extension}"
+    return file, filename
+
     
 ##############################
 ITEM_TITLE_MIN = 2
@@ -138,6 +146,7 @@ ITEM_TITLE_REGEX = f"^.{{{ITEM_TITLE_MIN},{ITEM_TITLE_MAX}}}$"
 def validate_item_title():
     error = f"title must be between {ITEM_TITLE_MIN} to {ITEM_TITLE_MAX} characters"
     item_title = request.form.get("item_title", "").strip()
+
     if not re.match(ITEM_TITLE_REGEX, item_title): raise_custom_exception(error, 400)
     return item_title
 
@@ -153,18 +162,10 @@ def validate_item_description():
 
 ##############################
 ITEM_PRICE_MIN = Decimal('0.01')
-ITEM_PRICE_MAX = Decimal('10000.00')
-# allows numbers up to 5 digits before the decimal. Optional decimal with up to 2 digits
-ITEM_PRICE_REGEX = r"^\d{1,5}(\.\d{1,2})?$"  # Match numbers like 12345.67, 12, 123.4
+ITEM_PRICE_MAX = Decimal('99999.99')
+ITEM_PRICE_REGEX = "^(?:0(?:\.[1-9]\d?)?|(?:[1-9]\d{0,3})(?:\.\d{1,2})?)$"
 def validate_item_price():
     error = f"Price must be a valid number between {ITEM_PRICE_MIN} and {ITEM_PRICE_MAX}"
     item_price_str = request.form.get("item_price", "").strip()
-    try:
-        # Convert item_price to Decimal for precise validation
-        item_price = Decimal(item_price_str)
-    except InvalidOperation:
-        # Raise error if conversion to Decimal fails
-        raise_custom_exception("Price must be a valid decimal number", 400)
-    # Check if the price is within the allowed range
-    if not re.match(ITEM_PRICE_REGEX, item_price): raise_custom_exception(error, 400)
-    return item_price
+    if not re.match(ITEM_PRICE_REGEX, item_price_str): raise_custom_exception(error, 400)
+    return Decimal(item_price_str)

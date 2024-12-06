@@ -2,30 +2,32 @@
 
             <main>
                 <section class="form_container">
+                    <div>
                     <h2>Edit item</h2>
                     <form id="frm_edit_item" class="restaurant_item_form">
                         <div>
                             <label for="item_title">Item title</label>
-                            <input type="text" id="item_title" name="item_title" value="{{item['item_title']}}">
+                            <input type="text" id="item_title" name="item_title" value="{{item['item_title']}}" mix-check="{{ x.ITEM_TITLE_REGEX }}">
                         </div>
 
                         <div>
                             <label for="item_description">Description</label>
-                            <input id="item_description" name="item_description" value="{{item['item_description']}}"></input>
+                            <input id="item_description" name="item_description" value="{{item['item_description']}}" mix-check="{{ x.ITEM_DESCRIPTION_REGEX }}"></input>
                         </div>
 
                         <div>
                             <label for="item_price">Price</label>
-                            <input type="text" id="item_price" name="item_price" value="{{item['item_price']}}">
+                            <input type="text" id="item_price" name="item_price" value="{{item['item_price']}}" step="0.01" min="{{ x.ITEM_PRICE_MIN }}" max="{{ x.ITEM_PRICE_MAX }}" mix-check="{{ x.ITEM_PRICE_REGEX }}">
                         </div>
 
                         <div class="image_input">
-                            <label for="item_images">Upload images</label>
-                            <input type="file" id="item_images" name="item_images" multiple accept="image/*">
+                            <label for="item_image">Upload image</label>
+                            <input type="file" name="item_image" accept=".png, .jpg, .jpeg, .gif">
                         </div>
 
                         <button class="cta center" mix-put="/items" mix-data="#frm_edit_item">Submit</button>
                     </form>
+                </div>
                 </section>
             </main>
             
