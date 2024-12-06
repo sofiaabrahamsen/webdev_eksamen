@@ -43,11 +43,4 @@ function handleSubmit() {
         formData.append('itemImages', file);
     }
 
-    // // Assuming we're sending data to a server endpoint (adjust URL accordingly)
-    // fetch('/add-or-edit-item', {
-    //     method: 'POST',
-    //     body: formData
-    // }).then(response => response.json())
-    //   .then(data => alert('Item added/edited successfully!'))
-    //   .catch(error => console.error('Error:', error));
 }
