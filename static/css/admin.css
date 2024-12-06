@@ -37,7 +37,6 @@ div.tab_header:has(h2) {
     justify-content: space-between;
 }
 
-
 /* admin table */
 
 table.admin_list {
@@ -55,7 +54,6 @@ thead.admin_list_head tr {
         text-align: end;
     }
 }
-
 
 tbody.admin_list_body tr {
     display: grid;
