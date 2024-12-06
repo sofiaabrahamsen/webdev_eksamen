@@ -22,7 +22,7 @@ h1 {
     color: var(--secondary-col);
 }
 
-p, input, label, a, tr {
+p, input, label, a, tr, textarea {
     font-family: var(--font-body);
     color: var(--cta-col);
     text-decoration: none;
