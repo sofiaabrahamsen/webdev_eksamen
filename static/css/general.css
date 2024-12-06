@@ -14,7 +14,7 @@ h1, h2, .logo, .cta, .delete, .blocker, .edit, .delete_small {
     font-family: var(--font-header);
 }
 
-h1 {
+h1.hello {
     margin-left: 2rem;
 }
 
