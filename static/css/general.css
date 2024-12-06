@@ -10,7 +10,7 @@
     margin: 0;
 }
 
-h1, h2, .logo, .cta, .delete, .blocker, .edit {
+h1, h2, .logo, .cta, .delete, .blocker, .edit, .delete_small {
     font-family: var(--font-header);
 }
 
@@ -28,7 +28,7 @@ p, input, label, a, tr, textarea {
     text-decoration: none;
 }
 
-.cta, button.delete, .blocker, .edit, input::file-selector-button {
+.cta, button.delete, .blocker, .edit, input::file-selector-button, .delete_small {
     color: var(--secondary-col);
     border: none;
     text-align: center;
@@ -49,7 +49,7 @@ p, input, label, a, tr, textarea {
     background-color: var(--primary-col);
 }
 
-button.delete {
+button.delete, .delete_small {
     background-color: var(--primary-col);
 }
 
@@ -153,6 +153,10 @@ main.login, main.signup {
     .cta, .delete {
         font-size: var(--font-cta-rem-desk);
         font-weight: var(--font-weight-header-mid);
+    }
+
+    .edit, .delete_small {
+        font-size: var(--font-body-rem-desk-mid);
     }
 
 
