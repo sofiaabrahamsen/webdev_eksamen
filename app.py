@@ -113,8 +113,6 @@ def view_customer():
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
-
-
 ##############################
 # Partner
 ##############################
@@ -413,7 +411,6 @@ def create_item():
         item_description = x.validate_item_description()
         item_price = x.validate_item_price()
         file, item_image = x.validate_item_image()  # Validate and process image file
-
         item_pk = str(uuid.uuid4())  # Generate a unique identifier for the item        
         item_created_at = int(time.time())
         item_deleted_at = 0
