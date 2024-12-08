@@ -10,6 +10,14 @@
     margin: 0;
 }
 
+#toast {
+    background-color: var(--secondary-col); /* Approximate +5 tint for red */
+    color: black; /* Equivalent to text-c-white */
+    border: none; /* 1px solid border with red color */
+    padding-left: 0.5rem;
+    font-family: var(--font-body);
+}
+
 h1, h2, .logo, .cta, .delete, .blocker, .edit, .delete_small {
     font-family: var(--font-header);
 }
