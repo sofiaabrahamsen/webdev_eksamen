@@ -142,13 +142,13 @@ def view_admin():
         db, cursor = x.db()  # Connect to the database
 
         # Fetch all users
-        user_query = """
+        q = """
             SELECT
-                user_name, user_last_name, user_email
+                user_pk, user_name, user_last_name, user_email, user_blocked_at
             FROM users
             WHERE user_deleted_at = 0
         """
-        cursor.execute(user_query)
+        cursor.execute(q)
         users = cursor.fetchall()  # Fetch all users as a list of dictionaries
         ic(users)  # Debugging output to confirm data
 
@@ -269,7 +269,7 @@ def view_restaurant_edit(item_pk):
         return render_template("view_restaurant_edit.html", item=item, x=x)
     
     except Exception as ex:
-        x.ic(ex)
+        ic(ex)
         return "Error loading edit page", 500
     
     finally:
@@ -522,33 +522,27 @@ def user_update():
 @app.put("/users/block/<user_pk>")
 def user_block(user_pk):
     try:
-        # Check if the user is an admin
+        # Check admin role
         if not "admin" in session.get("user").get("roles"):
             return redirect(url_for("view_login"))
         
-        # Validate the user_pk
-        user_pk = x.validate_uuid4(user_pk)
+        user_pk = x.validate_uuid4(user_pk)  # Validate UUID
         user_blocked_at = int(time.time())
         
-        # Perform the database update to block the user
+        # Update the user in the database
         db, cursor = x.db()
-        q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
-        cursor.execute(q, (user_blocked_at, user_pk))
+        cursor.execute('UPDATE users SET user_blocked_at = %s WHERE user_pk = %s', (user_blocked_at, user_pk))
         if cursor.rowcount != 1:
-            toast = render_template("___toast.html", message="Cannot block user")
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
+            return "<template>Could not block user</template>", 400
         db.commit()
 
-        # Return the updated block button (or change the button to Unblock)
+        # Respond with the new Unblock button
         btn_unblock = render_template("___btn_unblock_user.html", user={"user_pk": user_pk})
-        toast = render_template("___toast.html", message="User blocked successfully")
-        return f"""
-            <template mix-target="#block-{user_pk}" mix-replace>{btn_unblock}</template>
-            <template mix-target="#toast" mix-bottom>{toast}</template>
-        """
+        return f"<template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_unblock}</template>"
     
     except Exception as ex:
         # Handle exceptions and roll back if needed
+        ic(ex)
         if "db" in locals(): db.rollback()
         if isinstance(ex, x.CustomException): 
             toast = render_template("___toast.html", message=ex.message)
@@ -568,30 +562,23 @@ def user_block(user_pk):
 @app.put("/users/unblock/<user_pk>")
 def user_unblock(user_pk):
     try:
-        # Check if the user is an admin
-        if not "admin" in session.get("user").get("roles"): 
+        # Check admin role
+        if not "admin" in session.get("user").get("roles"):
             return redirect(url_for("view_login"))
         
-        # Validate the user_pk
-        user_pk = x.validate_uuid4(user_pk)
-        user_blocked_at = 0  # Unblock the user by setting user_blocked_at to 0
-        
-        # Perform the database update to unblock the user
+        user_pk = x.validate_uuid4(user_pk)  # Validate UUID
+        user_blocked_at = 0  # Unblock the user
+
+        # Update the user in the database
         db, cursor = x.db()
-        q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
-        cursor.execute(q, (user_blocked_at, user_pk))
+        cursor.execute('UPDATE users SET user_blocked_at = %s WHERE user_pk = %s', (user_blocked_at, user_pk))
         if cursor.rowcount != 1:
-            toast = render_template("___toast.html", message="Cannot unblock user")
-            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400            
+            return "<template>Could not unblock user</template>", 400
         db.commit()
 
-        # Return the updated unblock button (or change the button to Block)
+        # Respond with the new Block button
         btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
-        toast = render_template("___toast.html", message="User unblocked successfully")
-        return f"""
-            <template mix-target="#unblock-{user_pk}" mix-replace>{btn_block}</template>
-            <template mix-target="#toast" mix-bottom>{toast}</template>
-        """
+        return f"<template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_block}</template>"
     
     except Exception as ex:
         # Handle exceptions and roll back if needed

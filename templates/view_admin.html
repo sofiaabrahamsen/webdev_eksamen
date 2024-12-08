@@ -12,8 +12,6 @@
             <div class="tab_header">
                 <h2>Users</h2>
             </div>
-            <!-- Check if users are available -->
-            {% if users %}
             <table class="admin_list">
                 <thead class="admin_list_head">
                     <tr>
@@ -25,30 +23,31 @@
                 </thead>
                 <tbody class="admin_list_body">
                     {% for user in users %}
-                        <tr class="info">
-                            <td>{{ user.user_name }}</td>
-                            <td>{{ user.user_last_name }}</td>
-                            <td>{{ user.user_email }}</td>
-                            <td>
+                    <tr class="info">
+                        <td>{{ user.user_name }}</td>
+                        <td>{{ user.user_last_name }}</td>
+                        <td>{{ user.user_email }}</td>
+                        <td>
                             {% if user["user_blocked_at"] == 0 %}
                                 <!-- Block Button -->
-                                <button class="blocker" id="block-{{ user['user_pk'] }}" mix-get="/users/block/{{ user['user_pk'] }}" mix-method="put" mix-target="#block-{{ user['user_pk'] }}" mix-replace>
-                                    Block
-                                </button>
+                                <form id="frm_block_data">
+                                    <button class="blocker" id="block-unblock-btn-{{ user['user_pk'] }}" mix-put="/users/block/{{ user['user_pk'] }}" mix-data="#frm_block_data">
+                                        Block
+                                    </button>
+                                </form>
                             {% else %}
                                 <!-- Unblock Button -->
-                                <button id="unblock-{{ user['user_pk'] }}" mix-get="/users/unblock/{{ user['user_pk'] }}" mix-method="put" mix-target="#unblock-{{ user['user_pk'] }}" mix-replace>
-                                    Unblock
-                                </button>
+                                <form id="frm_unblock_data">
+                                    <button class="blocker" id="block-unblock-btn-{{ user['user_pk'] }}"  mix-put="/users/unblock/{{ user['user_pk'] }}" mix-data="#frm_unblock_data">
+                                        Unblock
+                                    </button>
+                                </form>
                             {% endif %}
-                            </td>
-                        </tr>
+                        </td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>
-            {% else %}
-                <p>No users are available at the moment.</p>
-            {% endif %}
         </div>
 
         <div id="items" class="tab_content">
