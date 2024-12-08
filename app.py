@@ -366,19 +366,20 @@ def create_user():
         q_roles = 'INSERT INTO users_roles (user_role_user_fk, user_role_role_fk) VALUES (%s, %s)'
         cursor.execute(q_roles, (user_pk, role_fk))
         db.commit()
-        return """<template mix-redirect="/login"></template>""", 201
+        return f"""<template mix-redirect="/login"></template>""", 201
     
     except Exception as ex:
         ic(ex)
-        if "db" in locals(): db.rollback()
+        if "db" in locals(): db.rollback()        
         if isinstance(ex, x.CustomException): 
             toast = render_template("___toast.html", message=ex.message)
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
-            if "users.user_email" in str(ex): 
+            if "users.user_email" in str(ex):
                 toast = render_template("___toast.html", message="email not available")
                 return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
+            
             return f"""<template mix-target="#toast" mix-bottom>System upgrating</template>""", 500        
         return f"""<template mix-target="#toast" mix-bottom>System under maintenance</template>""", 500    
     finally:
@@ -402,7 +403,9 @@ def create_item():
     try:
         # Check if the user is logged in
         if not session.get("user"):
-            x.raise_custom_exception("Please login to create an item.", 401)
+            toast = render_template("___toast.html", message="Please login to create an item")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
+            
         # Extract the user ID from the session
         user_pk = session.get("user").get("user_pk")
 
@@ -472,7 +475,10 @@ def _________PUT_________(): pass
 @app.put("/users")
 def user_update():
     try:
-        if not session.get("user"): x.raise_custom_exception("please login", 401)
+        if not session.get("user"):
+            toast = render_template("___toast.html", message="Please login")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
+        
 
         user_pk = session.get("user").get("user_pk")
         user_name = x.validate_user_name()
@@ -487,14 +493,20 @@ def user_update():
                 WHERE user_pk = %s
             """
         cursor.execute(q, (user_name, user_last_name, user_email, user_updated_at, user_pk))
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot update user", 401)
+        if cursor.rowcount != 1: 
+            toast = render_template("___toast.html", message="Cannot update user")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
+                    
         db.commit()
-        return """<template>user updated</template>"""
+        toast = render_template("___toast.html", message="User updated")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 200
     
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
         if isinstance(ex, x.mysql.connector.Error):
             if "users.user_email" in str(ex): return "<template>email not available</template>", 400
             return "<template>System upgrating</template>", 500        
@@ -523,18 +535,24 @@ def user_block(user_pk):
         q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
         cursor.execute(q, (user_blocked_at, user_pk))
         if cursor.rowcount != 1:
-            x.raise_custom_exception("Cannot block user", 400)
+            toast = render_template("___toast.html", message="Cannot block user")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
         db.commit()
 
         # Return the updated block button (or change the button to Unblock)
-        btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
-        return f"""<template mix-target="#block-{user_pk}" mix-replace>{btn_block}</template>"""
+        btn_unblock = render_template("___btn_unblock_user.html", user={"user_pk": user_pk})
+        toast = render_template("___toast.html", message="User blocked successfully")
+        return f"""
+            <template mix-target="#block-{user_pk}" mix-replace>{btn_unblock}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
         # Handle exceptions and roll back if needed
         if "db" in locals(): db.rollback()
         if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code        
         if isinstance(ex, x.mysql.connector.Error):
             return "<template>Database error</template>", 500        
         return "<template>System under maintenance</template>", 500  
@@ -563,18 +581,25 @@ def user_unblock(user_pk):
         q = 'UPDATE users SET user_blocked_at = %s WHERE user_pk = %s'
         cursor.execute(q, (user_blocked_at, user_pk))
         if cursor.rowcount != 1:
-            x.raise_custom_exception("Cannot unblock user", 400)
+            toast = render_template("___toast.html", message="Cannot unblock user")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400            
         db.commit()
 
         # Return the updated unblock button (or change the button to Block)
-        btn_block = render_template("___btn_unblock_user.html", user={"user_pk": user_pk})
-        return f"""<template mix-target="#unblock-{user_pk}" mix-replace>{btn_block}</template>"""
+        btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
+        toast = render_template("___toast.html", message="User unblocked successfully")
+        return f"""
+            <template mix-target="#unblock-{user_pk}" mix-replace>{btn_block}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
         # Handle exceptions and roll back if needed
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code
+                     
         if isinstance(ex, x.mysql.connector.Error):
             return "<template>Database error</template>", 500        
         return "<template>System under maintenance</template>", 500  
@@ -590,7 +615,9 @@ def user_unblock(user_pk):
 @app.put("/items")
 def item_update():
     try:
-        if not session.get("user"): x.raise_custom_exception("please login", 401)
+        if not session.get("user"):
+            toast = render_template("___toast.html", message="Please login")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
 
         # Get the item_pk from the session
         item_pk = session.get("item").get("item_pk")
@@ -617,9 +644,13 @@ def item_update():
         cursor.execute(q, (item_title, item_description, item_price, item_image, item_updated_at, item_pk))
 
         # Ensure exactly one row was updated
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot update item", 401)
+        if cursor.rowcount != 1:
+            toast = render_template("___toast.html", message="Cannot update item")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
+                    
         db.commit()
-        return """<template>item updated</template>"""
+        toast = render_template("___toast.html", message="Item updated")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 200
     
     except Exception as ex:
         ic(ex)
@@ -652,15 +683,25 @@ def item_block(item_pk):
         db, cursor = x.db()
         q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_blocked_at, item_pk))
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot block item", 400)
-        db.commit()
-        return """<template>item blocked</template>"""
+        if cursor.rowcount != 1: 
+            toast = render_template("___toast.html", message="Cannot block item")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400            
+        db.commit()    
+
+        # Return the updated unblock button (or change the button to Block)
+        btn_unblock = render_template("___btn_unblock_item.html", item={"item_pk": item_pk})
+        toast = render_template("___toast.html", message="Item blocked successfully")
+        return f"""
+            <template mix-target="#block-{item_pk}" mix-replace>{btn_unblock}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code        
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error</template>", 500        
@@ -681,16 +722,26 @@ def item_unblock(item_pk):
         db, cursor = x.db()
         q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_blocked_at, item_pk))
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot unblock item", 400)
+        if cursor.rowcount != 1: 
+            toast = render_template("___toast.html", message="Cannot unblock item")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400              
         db.commit()
-        return """<template>item unblocked</template>"""
+
+        # Return the updated unblock button (or change the button to Block)
+        btn_block = render_template("___btn_block_item.html", item={"item_pk": item_pk})
+        toast = render_template("___toast.html", message="Item unblocked successfully")
+        return f"""
+            <template mix-target="#unblock-{item_pk}" mix-replace>{btn_block}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
 
         ic(ex)
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code      
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error</template>", 500        
@@ -723,15 +774,20 @@ def user_delete(user_pk):
         db, cursor = x.db()
         q = 'UPDATE users SET user_deleted_at = %s WHERE user_pk = %s'
         cursor.execute(q, (user_deleted_at, user_pk))
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot delete user", 400)
+        if cursor.rowcount != 1:
+            toast = render_template("___toast.html", message="Cannot delete user")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400  
         db.commit()
-        return """<template>user deleted</template>"""
+
+        toast = render_template("___toast.html", message="User deleted")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 200
     
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code       
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error</template>", 500        
@@ -758,15 +814,21 @@ def item_delete(item_pk):
         db, cursor = x.db()
         q = 'UPDATE items SET item_deleted_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_deleted_at, item_pk))
-        if cursor.rowcount != 1: x.raise_custom_exception("cannot delete item", 400)
+        if cursor.rowcount != 1: 
+            x.raise_custom_exception("cannot delete item", 400)
+            toast = render_template("___toast.html", message="Cannot delete item")
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400  
         db.commit()
-        return """<template>item deleted</template>"""
+
+        toast = render_template("___toast.html", message="Item deleted")
+        return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 200
     
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
-        if isinstance(ex, x.CustomException): 
-            return f"""<template mix-target="#toast" mix-bottom>{ex.message}</template>""", ex.code        
+        if isinstance(ex, x.CustomException):
+            toast = render_template("___toast.html", message=ex.message)
+            return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code         
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             return "<template>Database error</template>", 500        
