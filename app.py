@@ -301,10 +301,10 @@ def login():
         cursor.execute(q, (user_email,))
         rows = cursor.fetchall()
         if not rows:
-            toast = render_template("___toast.html", message="user not registered")
+            toast = render_template("___toast.html", message="User not registered")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
         if not check_password_hash(rows[0]["user_password"], user_password):
-            toast = render_template("___toast.html", message="invalid credentials")
+            toast = render_template("___toast.html", message="Invalid credentials")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
         roles = []
         for row in rows:
@@ -377,7 +377,7 @@ def create_user():
         if isinstance(ex, x.mysql.connector.Error):
             ic(ex)
             if "users.user_email" in str(ex):
-                toast = render_template("___toast.html", message="email not available")
+                toast = render_template("___toast.html", message="Email not available")
                 return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
             
             return f"""<template mix-target="#toast" mix-bottom>System upgrating</template>""", 500        
