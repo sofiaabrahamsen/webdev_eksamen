@@ -2,6 +2,11 @@
 
 @media (min-width: 1050px) {
 
+section#map {
+    margin-top: 1rem;
+    height: 35rem;
+}
+
 main.customer {
     display: grid;
     grid-template-columns: 1fr 1fr;
