@@ -61,15 +61,32 @@
                         <th>Restaurant</th>
                         <th>Dish</th>
                         <th>Price</th>
+                        <th>Block/unblock</th>
                     </tr>
                 </thead>
                 <tbody class="admin_list_body">
                     {% for item in items %}
-                        <tr>
+                        <tr class="info">
                             <td>{{ item["restaurant_name"] }}</td>
                             <td>{{ item["item_title"] }}</td>
                             <td>{{ item["item_price"] }} Dkk</td>
-                            <td><button class="blocker center">Block</button></td>
+                            <td>
+                                {% if item["item_blocked_at"] == 0 %}
+                                    <!-- Block Button -->
+                                    <form id="frm_block_data_item">
+                                        <button class="blocker" id="block-unblock-btn-{{ item['item_pk'] }}" mix-put="/items/block/{{ item['item_pk'] }}" mix-data="#frm_block_data_item">
+                                            Block
+                                        </button>
+                                    </form>
+                                {% else %}
+                                    <!-- Unblock Button -->
+                                    <form id="frm_unblock_data_item">
+                                        <button class="blocker" id="block-unblock-btn-{{ item['item_pk'] }}"  mix-put="/items/unblock/{{ item['item_pk'] }}" mix-data="#frm_unblock_data_item">
+                                            Unblock
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -153,15 +153,15 @@ def view_admin():
         ic(users)  # Debugging output to confirm data
 
         # Fetch all items
-        item_query = """
+        q = """
             SELECT
-                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image, i.item_blocked_at,
                 u.user_name AS restaurant_name
             FROM items i
             JOIN users u ON i.item_user_fk = u.user_pk
             WHERE i.item_deleted_at = 0
         """
-        cursor.execute(item_query)
+        cursor.execute(q)
         items = cursor.fetchall()  # Fetch all items as a list of dictionaries
         ic(items)  # Debugging output to confirm data
         
@@ -664,9 +664,13 @@ def item_update():
 @app.put("/items/block/<item_pk>")
 def item_block(item_pk):
     try:
+        #check admin role
         if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
-        item_pk = x.validate_uuid4(item_pk)
+        
+        item_pk = x.validate_uuid4(item_pk) #validate uuid
         item_blocked_at = int(time.time())
+
+        # Block the user in the db
         db, cursor = x.db()
         q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_blocked_at, item_pk))
@@ -675,15 +679,16 @@ def item_block(item_pk):
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400            
         db.commit()    
 
-        # Return the updated unblock button (or change the button to Block)
-        btn_unblock = render_template("___btn_unblock_item.html", item={"item_pk": item_pk})
+        # Respond with the new Unblock button
+        btn_unblock = render_template("___btn_unblock_user.html", item={"item_pk": item_pk})
         toast = render_template("___toast.html", message="Item blocked successfully")
         return f"""
-            <template mix-target="#block-{item_pk}" mix-replace>{btn_unblock}</template>
+            <template mix-target="#block-unblock-btn-{item_pk}" mix-replace>{btn_unblock}</template>
             <template mix-target="#toast" mix-bottom>{toast}</template>
         """
     
     except Exception as ex:
+        # Handle exceptions and roll back if needed
         ic(ex)
         if "db" in locals(): db.rollback()
         if isinstance(ex, x.CustomException):
@@ -703,9 +708,13 @@ def item_block(item_pk):
 @app.put("/items/unblock/<item_pk>")
 def item_unblock(item_pk):
     try:
+        # check admin role
         if not "admin" in session.get("user").get("roles"): return redirect(url_for("view_login"))
-        item_pk = x.validate_uuid4(item_pk)
-        item_blocked_at = 0
+        
+        item_pk = x.validate_uuid4(item_pk) #validate uuid
+        item_blocked_at = 0 # unblock item
+
+        #unblock the user in the db
         db, cursor = x.db()
         q = 'UPDATE items SET item_blocked_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_blocked_at, item_pk))
@@ -714,16 +723,16 @@ def item_unblock(item_pk):
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400              
         db.commit()
 
-        # Return the updated unblock button (or change the button to Block)
-        btn_block = render_template("___btn_block_item.html", item={"item_pk": item_pk})
+        # Respond with the new Block button
+        btn_block = render_template("___btn_block_user.html", item={"item_pk": item_pk})
         toast = render_template("___toast.html", message="Item unblocked successfully")
         return f"""
-            <template mix-target="#unblock-{item_pk}" mix-replace>{btn_block}</template>
+            <template mix-target="#block-unblock-btn-{item_pk}" mix-replace>{btn_block}</template>
             <template mix-target="#toast" mix-bottom>{toast}</template>
         """
     
     except Exception as ex:
-
+        # handle exceptions and rollback if needed
         ic(ex)
         if "db" in locals(): db.rollback()
         if isinstance(ex, x.CustomException):
