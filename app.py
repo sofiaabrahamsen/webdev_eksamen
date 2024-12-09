@@ -53,8 +53,6 @@ def view_login():
             return redirect(url_for("view_admin"))
         if "customer" in session.get("user").get("roles"):
             return redirect(url_for("view_customer"))
-        if "partner" in session.get("user").get("roles"):
-            return redirect(url_for("view_partner"))
     return render_template("view_login.html", x=x, title="Login")
 
 ##############################
@@ -233,7 +231,10 @@ def view_choose_role():
 @app.get("/add-item")
 @x.no_cache
 def view_restaurant_add():
-    return render_template("view_restaurant_add.html", x=x)
+    user = session.get("user", "") # get the user from the session
+    if not user:
+        return redirect(url_for("view_index")) # redirect if user is not logged in
+    return render_template("view_restaurant_add.html", user=user, x=x)
 
 ##############################
 # View restaurant edit an item
@@ -241,8 +242,9 @@ def view_restaurant_add():
 @app.get("/edit-item/<item_pk>")
 @x.no_cache
 def view_restaurant_edit(item_pk):
-    if not session.get("user"):
-        return redirect(url_for("view_login"))
+    user = session.get("user", "") # get the user from the session
+    if not user:
+        return redirect(url_for("view_index")) # redirect if user is not logged in
     try:
         db, cursor = x.db()
         # Fetch the specific item data from the database
@@ -264,7 +266,7 @@ def view_restaurant_edit(item_pk):
         session["item"] = {"item_pk": item_pk}
         
         # Pass item data to the template
-        return render_template("view_restaurant_edit.html", item=item, x=x)
+        return render_template("view_restaurant_edit.html", user=user, item=item, x=x)
     
     except Exception as ex:
         ic(ex)
@@ -316,7 +318,7 @@ def login():
         if not check_password_hash(rows[0]["user_password"], user_password):
             toast = render_template("___toast.html", message="Invalid credentials")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
-        
+
         # Process user roles and redirect
         roles = []
         for row in rows:
@@ -335,7 +337,7 @@ def login():
         if len(roles) == 1:
             return f"""<template mix-redirect="/{roles[0]}"></template>"""
         return f"""<template mix-redirect="/choose-role"></template>"""
-    
+
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
@@ -347,6 +349,7 @@ def login():
             ic(ex)
             return "<template>System upgrading</template>", 500
         return "<template>System under maintenance</template>", 500
+    
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
