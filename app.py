@@ -134,10 +134,10 @@ def view_partner():
 def view_admin():
     if not session.get("user", ""):
         return redirect(url_for("view_login"))
-    user = session.get("user")
+    user = session.get("user", "")
     if not "admin" in user.get("roles", ""):
         return redirect(url_for("view_login"))
-    
+
     try:
         db, cursor = x.db()  # Connect to the database
         # Fetch all users

@@ -20,7 +20,6 @@
                         <input type="email" name="user_email" id="user_email" value="{{user['user_email']}}" >
                     </div>
 
-                    <!-- skal have disse knapper til at virke med korrekte routes -->
                     <button class="cta" mix-put="/users" mix-data="#frm_profile_update">Update profile</button>
                     <button class="delete" mix-delete="/users/{{user['user_pk']}}">Delete profile</button>
                 </form>

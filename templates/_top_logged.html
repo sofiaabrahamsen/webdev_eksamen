@@ -13,7 +13,10 @@
     <form method="POST" action="{{url_for('logout')}}">
         <header>
             <h1 class="logo">
-                <a class="logo" href="{{ url_for('view_' + user_role) if user_role else url_for('view_index') }}">HungerHub</a>
+                <!-- user["roles"][0] retrieves the first element from the list.
+                The if user["roles"] else url_for('view_index') check ensures that if the roles
+                list is empty, the user is redirected to the homepage (view_index).-->
+                <a class="logo" href="{{ url_for('view_' + user['roles'][0]) if user['roles'] else url_for('view_index') }}">HungerHub</a>
             </h1>
             
             <nav class="top_nav">
