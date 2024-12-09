@@ -55,7 +55,7 @@ def view_login():
             return redirect(url_for("view_customer"))
         if "partner" in session.get("user").get("roles"):
             return redirect(url_for("view_partner"))
-    return render_template("view_login.html", x=x, title="Login", message=request.args.get("message", ""))
+    return render_template("view_login.html", x=x, title="Login")
 
 ##############################
 # Signup
@@ -89,9 +89,8 @@ def view_customer():
 
     try:
         db, cursor = x.db()  # Connect to the database
-
         # Fetch all items
-        item_query = """
+        q = """
             SELECT
                 i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
                 u.user_name AS restaurant_name
@@ -99,15 +98,15 @@ def view_customer():
             JOIN users u ON i.item_user_fk = u.user_pk
             WHERE i.item_deleted_at = 0
         """
-        cursor.execute(item_query)
-        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
+        cursor.execute(q)
+        items = cursor.fetchall()  # Fetch all items as a list
         ic(items)  # Debugging output to confirm data
         
         # Pass data to the template
         return render_template("view_customer.html", user=user, items=items)
     
     except Exception as ex:
-        x.ic(ex)  # Log the error for debugging
+        ic(ex)  # Log the error for debugging
         return "Error loading admin page", 500  # Return an error message if something goes wrong
     
     finally:
@@ -141,7 +140,6 @@ def view_admin():
     
     try:
         db, cursor = x.db()  # Connect to the database
-
         # Fetch all users
         q = """
             SELECT
@@ -150,7 +148,7 @@ def view_admin():
             WHERE user_deleted_at = 0
         """
         cursor.execute(q)
-        users = cursor.fetchall()  # Fetch all users as a list of dictionaries
+        users = cursor.fetchall()  # Fetch all users as a list 
         ic(users)  # Debugging output to confirm data
 
         # Fetch all items
@@ -163,14 +161,14 @@ def view_admin():
             WHERE i.item_deleted_at = 0
         """
         cursor.execute(q)
-        items = cursor.fetchall()  # Fetch all items as a list of dictionaries
+        items = cursor.fetchall()  # Fetch all items as a list
         ic(items)  # Debugging output to confirm data
         
         # Pass data to the template
         return render_template("view_admin.html", user=user, users=users, items=items)
     
     except Exception as ex:
-        x.ic(ex)  # Log the error for debugging
+        ic(ex)  # Log the error for debugging
         return "Error loading admin page", 500  # Return an error message if something goes wrong
     
     finally:
@@ -186,9 +184,9 @@ def view_restaurant():
     if not session.get("user", ""):
         return redirect(url_for("view_login"))
     user = session.get("user")
+    
     if len(user.get("roles", "")) > 1:
         return redirect(url_for("view_choose_role"))
-    
     try:
         db, cursor = x.db()  # Connect to the database
 
@@ -209,7 +207,7 @@ def view_restaurant():
         return render_template("view_restaurant.html", user=user, items=items)
     
     except Exception as ex:
-        x.ic(ex)  # Log the error for debugging
+        ic(ex)  # Log the error for debugging
         return "Error loading admin page", 500  # Return an error message if something goes wrong
     
     finally:
@@ -247,7 +245,6 @@ def view_restaurant_edit(item_pk):
         return redirect(url_for("view_login"))
     try:
         db, cursor = x.db()
-        
         # Fetch the specific item data from the database
         q = """
             SELECT
@@ -291,8 +288,11 @@ def _________POST_________(): pass
 @x.no_cache
 def login():
     try:
+        # validate user input
         user_email = x.validate_user_email()
         user_password = x.validate_user_password()
+
+        # Database query for user authentication
         db, cursor = x.db()
         q = """ SELECT * FROM users
                 JOIN users_roles
@@ -302,12 +302,15 @@ def login():
                 WHERE user_email = %s"""
         cursor.execute(q, (user_email,))
         rows = cursor.fetchall()
+
         if not rows:
             toast = render_template("___toast.html", message="User not registered")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 400
         if not check_password_hash(rows[0]["user_password"], user_password):
             toast = render_template("___toast.html", message="Invalid credentials")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
+        
+        # Process user roles and redirect
         roles = []
         for row in rows:
             roles.append(row["role_name"])
@@ -320,12 +323,16 @@ def login():
         }
         ic(user)
         session["user"] = user
+
+        # redirect based on roles
         if len(roles) == 1:
             return f"""<template mix-redirect="/{roles[0]}"></template>"""
         return f"""<template mix-redirect="/choose-role"></template>"""
+    
     except Exception as ex:
         ic(ex)
         if "db" in locals(): db.rollback()
+        
         if isinstance(ex, x.CustomException):
             toast = render_template("___toast.html", message=ex.message)
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", ex.code    
@@ -483,7 +490,6 @@ def user_update():
             toast = render_template("___toast.html", message="Please login")
             return f"""<template mix-target="#toast" mix-bottom>{toast}</template>""", 401
         
-
         user_pk = session.get("user").get("user_pk")
         user_name = x.validate_user_name()
         user_last_name = x.validate_user_last_name()
@@ -822,11 +828,14 @@ def item_delete(item_pk):
         # Check if it is an admin (can delete all items). If its not the admin role then you can only delete your own items.
         if not "admin" in session.get("user").get("roles") and session.get("item").get("item_pk") != item_pk:
             return redirect(url_for("view_login"))
+        
         item_pk = x.validate_uuid4(item_pk)
         item_deleted_at = int(time.time())
+
         db, cursor = x.db()
         q = 'UPDATE items SET item_deleted_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_deleted_at, item_pk))
+        
         if cursor.rowcount != 1: 
             x.raise_custom_exception("cannot delete item", 400)
             toast = render_template("___toast.html", message="Cannot delete item")
