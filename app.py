@@ -31,6 +31,7 @@ def view_index():
 # Profile
 ##############################
 @app.get("/profile")
+@x.no_cache
 def view_profile():
     user = session.get("user", "")
     user_role = session.get("role_name", "")
@@ -287,6 +288,7 @@ def _________POST_________(): pass
 # Login
 ##############################
 @app.post("/login")
+@x.no_cache
 def login():
     try:
         user_email = x.validate_user_email()
@@ -390,6 +392,7 @@ def create_user():
 # Logout
 ##############################
 @app.post("/logout")
+@x.no_cache
 def logout():
     session.pop("user", None)
     return redirect(url_for("view_login"))
@@ -473,6 +476,7 @@ def _________PUT_________(): pass
 # Update user
 ##############################
 @app.put("/users")
+@x.no_cache
 def user_update():
     try:
         if not session.get("user"):
@@ -520,6 +524,7 @@ def user_update():
 # Block user
 ##############################
 @app.put("/users/block/<user_pk>")
+@x.no_cache
 def user_block(user_pk):
     try:
         # Check admin role
@@ -564,6 +569,7 @@ def user_block(user_pk):
 # Unblock user
 ##############################
 @app.put("/users/unblock/<user_pk>")
+@x.no_cache
 def user_unblock(user_pk):
     try:
         # Check admin role
@@ -608,6 +614,7 @@ def user_unblock(user_pk):
 # Update item
 ##############################
 @app.put("/items")
+@x.no_cache
 def item_update():
     try:
         if not session.get("user"):
@@ -665,11 +672,11 @@ def item_update():
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
-
 ##############################
 # Block item
 ##############################
 @app.put("/items/block/<item_pk>")
+@x.no_cache
 def item_block(item_pk):
     try:
         #check admin role
@@ -714,6 +721,7 @@ def item_block(item_pk):
 # Unblock item
 ##############################
 @app.put("/items/unblock/<item_pk>")
+@x.no_cache
 def item_unblock(item_pk):
     try:
         # check admin role
@@ -766,6 +774,7 @@ def ________DELETE________(): pass
 # Delete user
 ##############################
 @app.delete("/users/<user_pk>")
+@x.no_cache
 def user_delete(user_pk):
     try:
         # Check if user is logged
@@ -801,11 +810,11 @@ def user_delete(user_pk):
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
-
 ##############################
 # Delete item
 ##############################
 @app.delete("/items/<item_pk>")
+@x.no_cache
 def item_delete(item_pk):
     try:
         # Check if user is logged

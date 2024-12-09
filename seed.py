@@ -298,7 +298,7 @@ try:
 
     ##### 20 dishes #####
     dishes = ["Spaghetti Carbonara","Chicken Alfredo","Beef Wellington","Sushi","Pizza Margherita","Tacos","Caesar Salad","Fish and Chips","Pad Thai","Dim Sum","Croissant","Ramen","Lasagna","Burrito","Chicken Parmesan","Tom Yum Soup","Shawarma","Paella","Hamburger","Chicken Tikka Masala"]
-    restaurant_names = random.choice(["Nordic Bites", "Smørrebrød Haven", "The Danish Plate", "Copenhagen Cuisine", "Aarhus Alchemy", "Viking Feast", "Hygge Dining", "Fjord Flavors", "Rustic Rye", "The Pickled Herring", "New Nordic Table", "Sjømat Bistro", "Little Mermaid Café", "Kronborg Kitchen", "Tivoli Treats", "Baltic Bistro", "Midnight Mackerel", "Friluftsmad", "The Carlsberg Grill", "Copenhagen Comforts", "Aalborg Eats", "The Salmon Smokehouse", "Øresund Delights", "Butter & Bread", "Stork Fountain Café", "Nordic Harvest", "The Scandinavian Spoon", "Wintergarden Café", "Jutland Joy", "The Rye Corner", "Skagen Skewer", "Viking Hearth", "Langelinie Lounge", "Fjord & Flame", "Sønderborg Sweets", "The Nordic Nest", "Aarhus Art Café", "Seaweed & Salt", "Nordic Pines", "Søren’s Smørrebrød", "The Rustic Roast", "Coastal Cuisine", "Viking Vinery", "The Butter Knife", "Grønland Grub", "Himmelbjerg Haven", "Little Hygge Café", "Nordic Pearl", "Thyme & Timber", "The Iceberg Bistro"])
+    restaurant_names = ["Nordic Bites", "Smørrebrød Haven", "The Danish Plate", "Copenhagen Cuisine", "Aarhus Alchemy", "Viking Feast", "Hygge Dining", "Fjord Flavors", "Rustic Rye", "The Pickled Herring", "New Nordic Table", "Sjømat Bistro", "Little Mermaid Café", "Kronborg Kitchen", "Tivoli Treats", "Baltic Bistro", "Midnight Mackerel", "Friluftsmad", "The Carlsberg Grill", "Copenhagen Comforts"]
 
     user_password = hashed_password = generate_password_hash("password")
     for _ in range(20):
@@ -306,7 +306,7 @@ try:
         user_verified_at = random.choice([0,int(time.time())])
         user = {
             "user_pk" : user_pk,
-            "user_name" : restaurant_names,
+            "user_name" : random.choice(restaurant_names),
             "user_last_name" : "",
             "user_email" : fake.unique.email(),
             "user_password" : user_password,
