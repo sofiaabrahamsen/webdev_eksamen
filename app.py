@@ -538,7 +538,11 @@ def user_block(user_pk):
 
         # Respond with the new Unblock button
         btn_unblock = render_template("___btn_unblock_user.html", user={"user_pk": user_pk})
-        return f"<template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_unblock}</template>"
+        toast = render_template("___toast.html", message="User blocked successfully")
+        return f"""
+            <template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_unblock}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
         # Handle exceptions and roll back if needed
@@ -578,7 +582,11 @@ def user_unblock(user_pk):
 
         # Respond with the new Block button
         btn_block = render_template("___btn_block_user.html", user={"user_pk": user_pk})
-        return f"<template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_block}</template>"
+        toast = render_template("___toast.html", message="User unblocked successfully")
+        return f"""
+            <template mix-target='#block-unblock-btn-{user_pk}' mix-replace>{btn_block}</template>
+            <template mix-target="#toast" mix-bottom>{toast}</template>
+        """
     
     except Exception as ex:
         # Handle exceptions and roll back if needed
