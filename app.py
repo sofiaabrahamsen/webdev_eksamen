@@ -274,6 +274,13 @@ def view_restaurant_edit(item_pk):
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
+##############################
+# View customer single
+##############################
+@app.get("/customer-single")
+@x.no_cache
+def view_customer_single():
+    return render_template("view_customer_single.html", x=x)
 
 ###################################
 ###################################
@@ -835,7 +842,7 @@ def item_delete(item_pk):
         db, cursor = x.db()
         q = 'UPDATE items SET item_deleted_at = %s WHERE item_pk = %s'
         cursor.execute(q, (item_deleted_at, item_pk))
-        
+
         if cursor.rowcount != 1: 
             x.raise_custom_exception("cannot delete item", 400)
             toast = render_template("___toast.html", message="Cannot delete item")
