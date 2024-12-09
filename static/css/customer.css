@@ -56,14 +56,14 @@ section.item_list {
     flex-direction: row;
     justify-content: flex-start;
     gap: 2rem;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-wrap: wrap;
     margin-top: 2rem;
     padding: 0;
 
     }
 
-    div:has(button) {
+    div:has(button).more {
         margin-top: 2rem;
         display: flex;
         flex-direction: column;
@@ -74,13 +74,20 @@ section.item_list {
 
 ul.item_list > li {
     list-style-type: none;
+    flex: 1 1 calc(33.33% - 1rem); /* Ensure three items per row */
+    box-sizing: border-box; /* Include padding and borders in size calculation */
+
 
     > div {
     border-radius: 8px;
-    background-color: aliceblue;
-    padding: 4rem 7rem;
+    background-color: var(--primary-col);
+    padding: 2rem 2rem;
 }
 
+}
+
+a.card {
+    color: var(--secondary-col);
 }
 
 }
