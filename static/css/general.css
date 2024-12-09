@@ -139,6 +139,14 @@ main.login, main.signup {
     align-items: center;
 }
 
+#frm_user_signup label, #frm_user_login label {
+    margin-bottom: 0;
+}
+
+#frm_user_signup button {
+    margin-top: 0.8rem;
+}
+
 @media (min-width: 1050px) {
 
     h1, h2, .logo {

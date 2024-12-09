@@ -87,29 +87,97 @@ def view_customer():
 
     try:
         db, cursor = x.db()  # Connect to the database
-        # Fetch all items
+
+        # Fetch all restaurants with the restaurant role
         q = """
-            SELECT
-                i.item_pk, i.item_title, i.item_description, i.item_price, i.item_image,
+            SELECT DISTINCT
+                u.user_pk, 
                 u.user_name AS restaurant_name
-            FROM items i
-            JOIN users u ON i.item_user_fk = u.user_pk
-            WHERE i.item_deleted_at = 0
+            FROM users u
+            JOIN users_roles ur ON u.user_pk = ur.user_role_user_fk
+            WHERE ur.user_role_role_fk = %s AND u.user_deleted_at = 0
         """
-        cursor.execute(q)
-        items = cursor.fetchall()  # Fetch all items as a list
-        ic(items)  # Debugging output to confirm data
+        cursor.execute(q, (x.RESTAURANT_ROLE_PK,))
+        restaurants = cursor.fetchall()  # Fetch all restaurants
+        ic(restaurants)  # Debugging output
         
-        # Pass data to the template
-        return render_template("view_customer.html", user=user, items=items)
+        return render_template("view_customer.html", user=user, restaurants=restaurants)
     
     except Exception as ex:
-        ic(ex)  # Log the error for debugging
-        return "Error loading admin page", 500  # Return an error message if something goes wrong
+        ic(ex)
+        return "Error loading customer page", 500
     
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
+
+
+##############################
+# Customer single view page
+##############################
+@app.get("/customer/<user_pk>")
+@x.no_cache
+def view_customer_singleview(user_pk):
+    try:
+        db, cursor = x.db()  # Connect to the database
+
+        # Fetch restaurant info
+        q_restaurant = """
+            SELECT 
+                u.user_name AS restaurant_name, 
+                u.user_email AS restaurant_email, 
+                u.user_verified_at AS restaurant_verified_at,
+                u.user_created_at AS restaurant_created_at
+            FROM users u
+            WHERE u.user_pk = %s
+        """
+        cursor.execute(q_restaurant, (user_pk,))
+        restaurant = cursor.fetchone()  # Fetch restaurant details
+        ic(user_pk)         
+        if not restaurant:
+            return "Restaurant not found", 404
+
+        # Fetch items for the specific restaurant
+        q_items = """
+            SELECT 
+                i.item_title, 
+                i.item_description, 
+                i.item_price, 
+                i.item_image
+            FROM items i
+            WHERE i.item_deleted_at = 0 AND i.item_user_fk = %s
+        """
+        cursor.execute(q_items, (user_pk,))
+        items = cursor.fetchall()  # Fetch items
+
+        ic(restaurant, items)  # Debugging output
+
+        return render_template(
+            "view_customer_singleview.html", 
+            restaurant=restaurant, 
+            items=items
+        )
+
+    except Exception as ex:
+        ic(ex)
+        return "Error loading restaurant details", 500
+
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+
+
+
+# ##############################
+# # View customer single
+# ##############################
+# @app.get("/customer-single")
+# @x.no_cache
+# def view_customer_single():
+#     return render_template("view_customer_single.html", x=x)
+
 
 ##############################
 # Partner
@@ -276,13 +344,6 @@ def view_restaurant_edit(item_pk):
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
 
-##############################
-# View customer single
-##############################
-@app.get("/customer-single")
-@x.no_cache
-def view_customer_single():
-    return render_template("view_customer_single.html", x=x)
 
 ###################################
 ###################################

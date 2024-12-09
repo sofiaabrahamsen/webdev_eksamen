@@ -18,28 +18,26 @@
                     </form>
                 </div>
 
-
-
-
-
-
-
                 <section class="item_list">
-                <!-- indsæt for item in items så den displayer li pr item-->
                     <ul class="item_list">
-
-                        {% for item in items %}
+                        <!-- Loop through restaurants -->
+                        {% for restaurant in restaurants %}
                         <li>
-                            <p>{{ item["restaurant_name"] }}</p>
-                            <p>{{ item["item_title"] }}</p>
-                            <p>{{ item["item_price"] }} Dkk</p>
+                            <div>
+                                <a class="card" href="{{ url_for('view_customer_singleview', user_pk=restaurant.user_pk) }}">
+                                    {{ restaurant.restaurant_name }}
+                                </a>
+                            </div>
                         </li>
                     {% endfor %}
                     </ul>
-                    <div>
+                    <div class="more">
                         <button class="cta center">More</button>
                     </div>
                 </section>
+                
+                
+                
             </section>
         </main>
 
